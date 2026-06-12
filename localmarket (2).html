@@ -1,0 +1,3921 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mos Kicks Kaloito — Luxury Footwear</title>
+
+  <!-- ─────────────────────────────────────────────────────────────
+       FONTS
+  ───────────────────────────────────────────────────────────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════════════════════════ */
+    :root {
+      /* Dark theme (default) */
+      --bg-base:       #0a0a0f;
+      --bg-surface:    #111118;
+      --bg-elevated:   #18181f;
+      --bg-glass:      rgba(255,255,255,0.04);
+      --bg-glass-hover:rgba(255,255,255,0.08);
+      --border:        rgba(255,255,255,0.08);
+      --border-accent: rgba(212,175,55,0.35);
+
+      --gold:          #d4af37;
+      --gold-light:    #f0d060;
+      --gold-dim:      rgba(212,175,55,0.18);
+      --cream:         #f5f0e8;
+      --muted:         rgba(255,255,255,0.35);
+      --text:          rgba(255,255,255,0.90);
+      --text-sub:      rgba(255,255,255,0.55);
+
+      --accent-blue:   #4f8ef7;
+      --accent-red:    #e05252;
+      --accent-green:  #52c48a;
+      --accent-purple: #9b7fe8;
+
+      --r-sm: 8px;
+      --r-md: 14px;
+      --r-lg: 22px;
+      --r-xl: 32px;
+
+      --shadow-card: 0 8px 40px rgba(0,0,0,0.55);
+      --shadow-gold:  0 0 28px rgba(212,175,55,0.22);
+
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'Inter', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+
+      --sidebar-w: 240px;
+      --topbar-h:  60px;
+      --transition: 0.28s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    [data-theme="light"] {
+      --bg-base:       #f8f6f2;
+      --bg-surface:    #ffffff;
+      --bg-elevated:   #f0ede6;
+      --bg-glass:      rgba(0,0,0,0.03);
+      --bg-glass-hover:rgba(0,0,0,0.06);
+      --border:        rgba(0,0,0,0.10);
+      --border-accent: rgba(180,140,20,0.30);
+      --gold:          #b8920a;
+      --gold-light:    #d4af37;
+      --gold-dim:      rgba(180,140,20,0.14);
+      --muted:         rgba(0,0,0,0.35);
+      --text:          rgba(0,0,0,0.88);
+      --text-sub:      rgba(0,0,0,0.52);
+      --shadow-card:   0 8px 40px rgba(0,0,0,0.12);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-base);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font-family: var(--font-body); cursor: pointer; border: none; outline: none; }
+    input, textarea, select { font-family: var(--font-body); outline: none; }
+    img { max-width: 100%; display: block; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+    /* ─── UTILITY ─── */
+    .hidden  { display: none !important; }
+    .flex    { display: flex; }
+    .col     { flex-direction: column; }
+    .center  { align-items: center; justify-content: center; }
+    .gap-sm  { gap: 8px; }
+    .gap-md  { gap: 16px; }
+    .gap-lg  { gap: 24px; }
+    .w-full  { width: 100%; }
+
+    /* ═══════════════════════════════════════════════════════════
+       PAGE VIEWS
+    ═══════════════════════════════════════════════════════════ */
+    .view { display: none; min-height: 100vh; }
+    .view.active { display: flex; }
+
+    /* ═══════════════════════════════════════════════════════════
+       ── LOGIN PAGE ──
+    ═══════════════════════════════════════════════════════════ */
+    #view-login {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-base);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated grain / luxury bg */
+    #view-login::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(212,175,55,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(79,142,247,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .login-card {
+      position: relative;
+      z-index: 1;
+      width: min(420px, 92vw);
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 48px 40px 44px;
+      backdrop-filter: blur(24px);
+      box-shadow: var(--shadow-card);
+      animation: fadeSlideUp 0.55s ease both;
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .login-logo-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      background: var(--gold-dim);
+      border: 1.5px solid var(--border-accent);
+      margin-bottom: 14px;
+    }
+
+    .login-logo-mark svg { color: var(--gold); }
+
+    .login-logo h1 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: var(--text);
+    }
+
+    .login-logo p {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 12px 16px;
+      color: var(--text);
+      font-size: 0.92rem;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px var(--gold-dim);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      color: #0a0a0f;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      border-radius: var(--r-sm);
+      transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(212,175,55,0.38);
+    }
+
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      padding: 10px 20px;
+      background: var(--bg-glass);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      font-size: 0.86rem;
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-glass-hover);
+      border-color: var(--gold);
+    }
+
+    .btn-danger {
+      padding: 8px 16px;
+      background: rgba(224,82,82,0.15);
+      color: var(--accent-red);
+      border: 1px solid rgba(224,82,82,0.3);
+      border-radius: var(--r-sm);
+      font-size: 0.82rem;
+      transition: background var(--transition);
+    }
+
+    .btn-danger:hover { background: rgba(224,82,82,0.25); }
+
+    .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .login-hint {
+      margin-top: 22px;
+      text-align: center;
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       ── ADMIN SHELL (sidebar + main) ──
+    ═══════════════════════════════════════════════════════════ */
+    #view-admin, #view-super {
+      flex-direction: row;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 200;
+      transition: transform var(--transition);
+      overflow-y: auto;
+    }
+
+    .sidebar-brand {
+      padding: 22px 20px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-brand-name {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 300;
+      letter-spacing: 0.07em;
+      color: var(--text);
+    }
+
+    .sidebar-brand-sub {
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 3px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-section-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 12px 10px 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      color: var(--text-sub);
+      font-size: 0.86rem;
+      font-weight: 500;
+      transition: background var(--transition), color var(--transition);
+      user-select: none;
+    }
+
+    .nav-item:hover { background: var(--bg-glass-hover); color: var(--text); }
+
+    .nav-item.active {
+      background: var(--gold-dim);
+      color: var(--gold);
+      border: 1px solid var(--border-accent);
+    }
+
+    .nav-item svg { flex-shrink: 0; }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--gold-dim);
+      border: 1.5px solid var(--border-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .sidebar-user-info small {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    /* Main area */
+    .admin-main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top bar */
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Admin content panels */
+    .admin-content {
+      flex: 1;
+      padding: 28px;
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ─── STAT CARDS ─── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .stat-card:hover { border-color: var(--border-accent); box-shadow: var(--shadow-gold); }
+
+    .stat-card-icon {
+      width: 36px; height: 36px;
+      border-radius: var(--r-sm);
+      background: var(--gold-dim);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+      color: var(--gold);
+    }
+
+    .stat-card-value {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-card-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    /* ─── TABLES ─── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-table th {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+    }
+
+    .data-table td {
+      padding: 12px 14px;
+      font-size: 0.86rem;
+      color: var(--text-sub);
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: var(--bg-glass); color: var(--text); }
+
+    /* ═══════════════════════════════════════════════════════════
+       ── USER HOMEPAGE ──
+    ═══════════════════════════════════════════════════════════ */
+    #view-user {
+      flex-direction: column;
+      background: var(--bg-base);
+    }
+
+    /* ─── USER NAV ─── */
+    .user-nav {
+      position: sticky; top: 0; z-index: 150;
+      height: var(--topbar-h);
+      background: rgba(10,10,15,0.82);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(16px, 4vw, 40px);
+    }
+
+    [data-theme="light"] .user-nav {
+      background: rgba(248,246,242,0.88);
+    }
+
+    .user-nav-brand {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 300;
+      letter-spacing: 0.09em;
+      color: var(--text);
+    }
+
+    .user-nav-brand span { color: var(--gold); }
+
+    .user-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Search bar in nav */
+    .nav-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 7px 16px;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .nav-search:focus-within {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px var(--gold-dim);
+    }
+
+    .nav-search input {
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 0.86rem;
+      width: 180px;
+    }
+
+    .nav-search input::placeholder { color: var(--muted); }
+
+    @media (max-width: 600px) {
+      .nav-search input { width: 110px; }
+    }
+
+    /* Icon button */
+    .icon-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition), border-color var(--transition);
+    }
+
+    .icon-btn:hover { background: var(--bg-glass-hover); color: var(--text); border-color: var(--gold); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 92vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 90% 70% at 50% -5%, rgba(212,175,55,0.14) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 50% at 90% 80%, rgba(79,142,247,0.07) 0%, transparent 55%);
+      z-index: 0;
+    }
+
+    /* Animated floating orbs */
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.18;
+      animation: orbFloat 12s ease-in-out infinite;
+    }
+
+    .hero-orb-1 {
+      width: 400px; height: 400px;
+      background: var(--gold);
+      top: -100px; right: 10%;
+      animation-delay: 0s;
+    }
+
+    .hero-orb-2 {
+      width: 280px; height: 280px;
+      background: var(--accent-blue);
+      bottom: 5%; left: 5%;
+      animation-delay: -4s;
+    }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-30px) scale(1.06); }
+    }
+
+    .hero-content {
+      position: relative; z-index: 1;
+      padding: clamp(40px, 8vw, 100px) clamp(20px, 6vw, 80px);
+      max-width: 640px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      background: var(--gold-dim);
+      border: 1px solid var(--border-accent);
+      padding: 6px 14px;
+      border-radius: 99px;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+      color: var(--text-sub);
+      line-height: 1.75;
+      max-width: 480px;
+      margin-bottom: 36px;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero-cta .btn-primary {
+      width: auto;
+      padding: 14px 32px;
+    }
+
+    /* Shoe showcase float */
+    .hero-visual {
+      position: absolute;
+      right: clamp(20px, 8vw, 100px);
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-shoe-frame {
+      width: clamp(260px, 35vw, 480px);
+      aspect-ratio: 1;
+      border-radius: var(--r-xl);
+      background: var(--bg-glass);
+      border: 1px solid var(--border-accent);
+      backdrop-filter: blur(20px);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: var(--shadow-card), var(--shadow-gold);
+      animation: heroFrameFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes heroFrameFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-14px); }
+    }
+
+    .hero-shoe-frame img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-shoe-placeholder {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 14px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 900px) {
+      .hero-visual { display: none; }
+    }
+
+    /* ─── SECTION LAYOUTS ─── */
+    .section { padding: clamp(40px, 6vw, 80px) clamp(16px, 5vw, 60px); }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+
+    .section-title span { color: var(--gold); font-style: italic; }
+
+    /* ─── PRODUCT GRID ─── */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 22px;
+    }
+
+    /* ─── PRODUCT CARD ─── */
+    .product-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+      animation: fadeSlideUp 0.4s ease both;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card);
+      border-color: var(--border-accent);
+    }
+
+    .product-img-wrap {
+      aspect-ratio: 1;
+      overflow: hidden;
+      background: var(--bg-elevated);
+      position: relative;
+    }
+
+    .product-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .product-card:hover .product-img-wrap img { transform: scale(1.05); }
+
+    .product-badge {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: rgba(212,175,55,0.9);
+      color: #0a0a0f;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 99px;
+    }
+
+    .product-info {
+      padding: 16px 18px 18px;
+    }
+
+    .product-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .product-posted-by {
+      font-size: 0.73rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .product-desc {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+      margin-bottom: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .product-price {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .like-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition), border-color var(--transition);
+    }
+
+    .like-btn:hover { background: rgba(224,82,82,0.12); color: var(--accent-red); border-color: rgba(224,82,82,0.3); }
+    .like-btn.liked { background: rgba(224,82,82,0.15); color: var(--accent-red); border-color: rgba(224,82,82,0.4); }
+
+    /* ─── TRENDING STRIP ─── */
+    .trending-strip {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      scrollbar-width: none;
+    }
+
+    .trending-strip::-webkit-scrollbar { display: none; }
+
+    .trending-chip {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: border-color var(--transition), color var(--transition), background var(--transition);
+    }
+
+    .trending-chip:hover { border-color: var(--gold); color: var(--text); }
+    .trending-chip.active { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+
+    /* ═══════════════════════════════════════════════════════════
+       ── PRODUCT DETAIL MODAL ──
+    ═══════════════════════════════════════════════════════════ */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      z-index: 500;
+      background: rgba(0,0,0,0.75);
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity var(--transition);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--r-xl);
+      width: min(820px, 96vw);
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-card), var(--shadow-gold);
+      transform: translateY(20px) scale(0.97);
+      transition: transform var(--transition);
+    }
+
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+    .modal-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 640px) {
+      .modal-inner { grid-template-columns: 1fr; }
+    }
+
+    .modal-img {
+      aspect-ratio: 1;
+      overflow: hidden;
+      border-radius: var(--r-xl) 0 0 var(--r-xl);
+    }
+
+    @media (max-width: 640px) {
+      .modal-img { border-radius: var(--r-xl) var(--r-xl) 0 0; }
+    }
+
+    .modal-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .modal-body {
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--muted);
+      z-index: 10;
+      transition: color var(--transition), border-color var(--transition);
+    }
+
+    .modal-close:hover { color: var(--text); border-color: var(--gold); }
+
+    .modal { position: relative; }
+
+    .modal-category {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .modal-name {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 300;
+      line-height: 1.2;
+      color: var(--text);
+    }
+
+    .modal-price {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .modal-desc {
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      line-height: 1.75;
+    }
+
+    .modal-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .modal-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       ── UPLOAD FORM ──
+    ═══════════════════════════════════════════════════════════ */
+    .upload-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 700px) {
+      .upload-grid { grid-template-columns: 1fr; }
+    }
+
+    .image-upload-zone {
+      grid-column: 1 / -1;
+      border: 2px dashed var(--border);
+      border-radius: var(--r-md);
+      padding: 36px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color var(--transition), background var(--transition);
+    }
+
+    .image-upload-zone:hover { border-color: var(--gold); background: var(--gold-dim); }
+
+    .image-upload-zone.has-image { border-style: solid; border-color: var(--border-accent); }
+
+    .image-preview {
+      max-height: 200px;
+      object-fit: contain;
+      margin: 0 auto 12px;
+      border-radius: var(--r-sm);
+    }
+
+    .upload-zone-text { color: var(--muted); font-size: 0.86rem; line-height: 1.7; }
+
+    .ai-toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .btn-ai {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      background: rgba(155,127,232,0.14);
+      color: var(--accent-purple);
+      border: 1px solid rgba(155,127,232,0.3);
+      border-radius: var(--r-sm);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+
+    .btn-ai:hover { background: rgba(155,127,232,0.24); }
+
+    .btn-ai:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ═══════════════════════════════════════════════════════════
+       ── PRODUCT MANAGEMENT TABLE ──
+    ═══════════════════════════════════════════════════════════ */
+    .prod-thumb {
+      width: 42px; height: 42px;
+      border-radius: var(--r-sm);
+      object-fit: cover;
+      background: var(--bg-elevated);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       ── AGENTS (Super Admin) ──
+    ═══════════════════════════════════════════════════════════ */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .agent-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 20px;
+      cursor: pointer;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .agent-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--accent-purple));
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .agent-card:hover::before { opacity: 1; }
+    .agent-card:hover { border-color: var(--border-accent); box-shadow: var(--shadow-gold); }
+    .agent-card.running { border-color: var(--accent-green); box-shadow: 0 0 20px rgba(82,196,138,0.15); }
+    .agent-card.error { border-color: var(--accent-red); }
+
+    .agent-icon {
+      width: 40px; height: 40px;
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+      font-size: 1.2rem;
+    }
+
+    .agent-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+    .agent-desc { font-size: 0.78rem; color: var(--text-sub); line-height: 1.6; }
+
+    .agent-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 99px;
+      margin-top: 12px;
+    }
+
+    .status-idle { background: rgba(255,255,255,0.06); color: var(--muted); }
+    .status-running { background: rgba(82,196,138,0.15); color: var(--accent-green); }
+    .status-done { background: rgba(212,175,55,0.15); color: var(--gold); }
+    .status-error { background: rgba(224,82,82,0.15); color: var(--accent-red); }
+
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status-running .status-dot { animation: blink 1s ease-in-out infinite; }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Workflow builder */
+    .workflow-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .workflow-chain {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      max-width: 300px;
+    }
+
+    .workflow-node {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      transition: border-color var(--transition);
+    }
+
+    .workflow-node.active-node { border-color: var(--gold); background: var(--gold-dim); }
+    .workflow-node.done-node { border-color: var(--accent-green); }
+
+    .workflow-arrow {
+      display: flex;
+      justify-content: center;
+      padding: 6px 0;
+      color: var(--muted);
+      font-size: 1.2rem;
+    }
+
+    /* Agent output area */
+    .agent-output {
+      background: var(--bg-base);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      line-height: 1.8;
+      min-height: 180px;
+      max-height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    .agent-output .log-line { display: block; }
+    .agent-output .log-gold { color: var(--gold); }
+    .agent-output .log-green { color: var(--accent-green); }
+    .agent-output .log-blue { color: var(--accent-blue); }
+    .agent-output .log-red { color: var(--accent-red); }
+
+    /* MD file list */
+    .agent-file-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+    .agent-file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 12px 16px;
+    }
+
+    .agent-file-name { font-size: 0.86rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
+
+    /* ═══════════════════════════════════════════════════════════
+       ── ANALYTICS CHARTS ──
+    ═══════════════════════════════════════════════════════════ */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 20px;
+    }
+
+    @media (max-width: 500px) {
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+
+    .chart-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 22px;
+    }
+
+    .chart-card canvas { width: 100% !important; }
+
+    /* ═══════════════════════════════════════════════════════════
+       ── TOAST NOTIFICATIONS ──
+    ═══════════════════════════════════════════════════════════ */
+    #toast-container {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 14px 18px;
+      box-shadow: var(--shadow-card);
+      min-width: 260px;
+      max-width: 380px;
+      pointer-events: all;
+      animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    .toast.out { animation: toastOut 0.3s ease both; }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(40px) scale(0.95); }
+      to   { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    @keyframes toastOut {
+      to { opacity: 0; transform: translateX(40px) scale(0.95); }
+    }
+
+    .toast-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .toast-success .toast-icon { background: rgba(82,196,138,0.15); color: var(--accent-green); }
+    .toast-error   .toast-icon { background: rgba(224,82,82,0.15); color: var(--accent-red); }
+    .toast-info    .toast-icon { background: var(--gold-dim); color: var(--gold); }
+
+    .toast-text { font-size: 0.86rem; color: var(--text); flex: 1; }
+
+    /* ═══════════════════════════════════════════════════════════
+       ── LOADING SPINNER ──
+    ═══════════════════════════════════════════════════════════ */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.12);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ═══════════════════════════════════════════════════════════
+       ── EMPTY STATE ──
+    ═══════════════════════════════════════════════════════════ */
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--muted);
+    }
+
+    .empty-state svg { margin: 0 auto 16px; opacity: 0.35; }
+    .empty-state h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 300; margin-bottom: 8px; }
+    .empty-state p { font-size: 0.84rem; }
+
+    /* ═══════════════════════════════════════════════════════════
+       ── BADGE / TAG ──
+    ═══════════════════════════════════════════════════════════ */
+    .tag {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+    }
+
+    .tag-gold { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--border-accent); }
+    .tag-green { background: rgba(82,196,138,0.12); color: var(--accent-green); }
+    .tag-blue  { background: rgba(79,142,247,0.12); color: var(--accent-blue); }
+    .tag-purple{ background: rgba(155,127,232,0.12); color: var(--accent-purple); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── MOBILE SIDEBAR TOGGLE ─── */
+    .sidebar-toggle {
+      display: none;
+      width: 36px; height: 36px;
+      border-radius: var(--r-sm);
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--text-sub);
+    }
+
+    @media (max-width: 800px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .admin-main { margin-left: 0; }
+      .sidebar-toggle { display: flex; }
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 190;
+    }
+
+    .sidebar-overlay.open { display: block; }
+
+    /* ─── EDIT MODAL ─── */
+    .edit-modal-overlay {
+      position: fixed; inset: 0;
+      z-index: 600;
+      background: rgba(0,0,0,0.8);
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity var(--transition);
+      backdrop-filter: blur(4px);
+    }
+
+    .edit-modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .edit-modal {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--r-xl);
+      width: min(560px, 96vw);
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 36px 32px;
+      box-shadow: var(--shadow-card);
+    }
+
+    /* ─── RESPONSIVE ADJUSTMENTS ─── */
+    @media (max-width: 480px) {
+      .product-grid { grid-template-columns: 1fr; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .login-card { padding: 32px 22px; }
+    }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+
+    /* ─── SCROLL TO TOP BUTTON ─── */
+    #scroll-top {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      z-index: 300;
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #0a0a0f;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(212,175,55,0.45);
+      opacity: 0; pointer-events: none;
+      transition: opacity var(--transition), transform var(--transition);
+    }
+
+    #scroll-top.visible { opacity: 1; pointer-events: all; }
+    #scroll-top:hover { transform: translateY(-3px); }
+
+    /* ─── PAGINATION ─── */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 24px 0 8px;
+      flex-wrap: wrap;
+    }
+
+    .page-btn {
+      width: 36px; height: 36px;
+      border-radius: var(--r-sm);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.84rem;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+    }
+
+    .page-btn:hover, .page-btn.active {
+      background: var(--gold-dim);
+      border-color: var(--border-accent);
+      color: var(--gold);
+    }
+
+    /* ─── FOOTER ─── */
+    .user-footer {
+      padding: 40px clamp(16px, 5vw, 60px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .user-footer-brand {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .user-footer p {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .footer-credit {
+      width: 100%;
+      text-align: center;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+
+    /* ─── LOADING / SPINNER ─── */
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-loading {
+      pointer-events: none;
+      opacity: 0.75;
+      position: relative;
+    }
+
+    .btn-loading .spinner { margin-right: 8px; }
+
+    /* Global page loading overlay */
+    #global-loader {
+      position: fixed; inset: 0;
+      background: var(--bg-base);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    #global-loader.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #global-loader .loader-mark {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      border-top-color: var(--gold);
+      animation: spin 0.9s linear infinite;
+      position: relative;
+    }
+
+    #global-loader .loader-text {
+      position: absolute;
+      bottom: -38px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      white-space: nowrap;
+    }
+
+    /* Skeleton shimmer for content loading */
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg-glass) 25%, var(--bg-glass-hover) 50%, var(--bg-glass) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      border-radius: var(--r-sm);
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     GLOBAL LOADER
+══════════════════════════════════════════════════════════════ -->
+<div id="global-loader">
+  <div class="loader-mark">
+    <span class="loader-text">Mos Kicks Kaloito</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     TOAST CONTAINER
+══════════════════════════════════════════════════════════════ -->
+<div id="toast-container"></div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SCROLL TO TOP
+══════════════════════════════════════════════════════════════ -->
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- ══════════════════════════════════════════════════════════════
+     VIEW: LOGIN
+══════════════════════════════════════════════════════════════ -->
+<div id="view-login" class="view active">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-mark">
+        <!-- Shoe SVG icon -->
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 18s0-7 6-9l4-1 2-4 6 2-4 12H2z"/>
+          <path d="M2 18h16"/>
+        </svg>
+      </div>
+      <h1>Mos Kicks Kaloito</h1>
+      <p>Luxury Footwear Exchange</p>
+    </div>
+
+    <div class="form-group">
+      <label>Name / Username</label>
+      <input type="text" id="login-user" placeholder="Enter your name or username" autocomplete="username" />
+    </div>
+
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" id="login-phone" placeholder="e.g. 07XXXXXXXX" autocomplete="tel" />
+    </div>
+
+    <button class="btn-primary" onclick="handleLogin()">Sign In</button>
+
+    <p class="login-hint">
+      By signing in you agree to our terms of service.<br>
+      For marketplace access, any name & phone will work.
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     VIEW: USER HOMEPAGE
+══════════════════════════════════════════════════════════════ -->
+<div id="view-user" class="view">
+
+  <!-- Navigation -->
+  <nav class="user-nav">
+    <div class="user-nav-brand">Local<span>Market</span></div>
+
+    <div class="nav-search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="user-search" placeholder="Search shoes…" oninput="renderUserFeed()" />
+    </div>
+
+    <div class="user-nav-actions">
+      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+        <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="btn-secondary btn-icon" onclick="doLogout()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span>●</span> New arrivals daily
+      </div>
+      <h1 class="hero-title">Step into<br><em>Luxury</em></h1>
+      <p class="hero-sub">Discover handpicked premium footwear from curated sellers. From classic leather Oxfords to avant-garde sneakers — every pair tells a story.</p>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="document.getElementById('feed-section').scrollIntoView({behavior:'smooth'})">
+          Shop Now
+        </button>
+        <button class="btn-secondary" onclick="document.getElementById('trending-section').scrollIntoView({behavior:'smooth'})">
+          View Trending
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-shoe-frame" id="hero-frame">
+        <div class="hero-shoe-placeholder">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 18s0-7 6-9l4-1 2-4 6 2-4 12H2z"/>
+          </svg>
+          <span style="font-size:0.8rem;color:var(--muted)">Featured shoe</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trending -->
+  <section class="section" id="trending-section">
+    <div class="section-header">
+      <h2 class="section-title">What's <span>Trending</span></h2>
+    </div>
+    <div class="trending-strip" id="trending-strip">
+      <!-- Populated by JS -->
+    </div>
+  </section>
+
+  <!-- Product Feed -->
+  <section class="section" id="feed-section">
+    <div class="section-header">
+      <h2 class="section-title">Latest <span>Drops</span></h2>
+      <select id="sort-select" style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 14px;color:var(--text);font-size:0.84rem;" onchange="renderUserFeed()">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+        <option value="price-low">Price: Low → High</option>
+        <option value="price-high">Price: High → Low</option>
+        <option value="likes">Most Liked</option>
+      </select>
+    </div>
+
+    <div class="product-grid" id="user-feed">
+      <!-- Populated by JS -->
+    </div>
+
+    <div id="user-feed-empty" class="empty-state hidden">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <h3>No products found</h3>
+      <p>Try a different search term or check back later.</p>
+    </div>
+
+    <div class="pagination" id="user-pagination"></div>
+  </section>
+
+  <!-- Recently Added -->
+  <section class="section" style="background:var(--bg-surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div class="section-header">
+      <h2 class="section-title">Recently <span>Added</span></h2>
+    </div>
+    <div class="product-grid" id="recent-feed">
+      <!-- 4 most recent items -->
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="user-footer">
+    <div class="user-footer-brand">Mos Kicks Kaloito</div>
+    <p>© 2025 Mos Kicks Kaloito. Luxury Footwear Exchange. All rights reserved.</p>
+    <p class="footer-credit">System developed by Kingvan Advanced Systems</p>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PRODUCT DETAIL MODAL
+══════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="product-modal-overlay" onclick="closeProductModal(event)">
+  <div class="modal" id="product-modal">
+    <button class="modal-close" onclick="closeProductModalBtn()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-inner">
+      <div class="modal-img">
+        <img id="modal-img" src="" alt="" />
+      </div>
+      <div class="modal-body">
+        <div class="modal-category" id="modal-category">—</div>
+        <div class="modal-name" id="modal-name">—</div>
+        <div class="modal-price" id="modal-price">—</div>
+        <p class="modal-desc" id="modal-desc">—</p>
+        <div class="divider"></div>
+        <div class="modal-meta">
+          <div class="modal-meta-row">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span id="modal-seller">—</span>
+          </div>
+          <div class="modal-meta-row">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span id="modal-time">—</span>
+          </div>
+        </div>
+        <div style="margin-top:auto; padding-top:14px; display:flex; flex-direction:column; gap:10px;">
+          <button class="btn-primary w-full" style="padding:13px; display:flex; align-items:center; justify-content:center; gap:8px;" id="modal-whatsapp-btn" onclick="orderViaWhatsApp()">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.149-.149.347-.347.52-.521.173-.173.231-.297.347-.495.116-.198.058-.372-.01-.521-.07-.149-.62-1.43-.85-1.998-.225-.554-.453-.555-.673-.555-.198-.001-.41-.001-.62-.001-.198 0-.52.075-.793.372-.273.298-1.04 1.016-1.04 2.479s1.06 2.873 1.207 3.07c.149.198 2.064 3.155 5.005 4.296 2.94 1.14 2.94.76 3.47.71.53-.05 1.758-.71 2.005-1.404.248-.694.248-1.29.173-1.404-.074-.115-.273-.198-.57-.348z"/><path d="M12.001 2C6.477 2 2 6.477 2 12c0 2.13.628 4.11 1.71 5.78L2 22l4.337-1.659A9.96 9.96 0 0 0 12.001 22C17.524 22 22 17.523 22 12S17.524 2 12.001 2zm0 18.166a8.13 8.13 0 0 1-4.146-1.137l-.297-.177-3.077 1.176 1.193-3.001-.193-.31A8.122 8.122 0 0 1 3.834 12c0-4.5 3.665-8.166 8.167-8.166 4.501 0 8.166 3.665 8.166 8.166 0 4.502-3.665 8.166-8.166 8.166z"/></svg>
+            Order on WhatsApp
+          </button>
+          <button class="like-btn w-full" style="justify-content:center;border-radius:var(--r-sm);padding:12px;" id="modal-like-btn" onclick="modalLike()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span id="modal-like-count">0</span> Likes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     VIEW: ADMIN DASHBOARD
+══════════════════════════════════════════════════════════════ -->
+<div id="view-admin" class="view">
+
+  <!-- Sidebar Overlay (mobile) -->
+  <div class="sidebar-overlay" id="admin-sidebar-overlay" onclick="closeSidebar('admin')"></div>
+
+  <aside class="sidebar" id="admin-sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-name">Mos Kicks Kaloito</div>
+      <div class="sidebar-brand-sub">Admin Panel</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+      <div class="nav-item active" onclick="adminNav('overview',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+
+      <div class="nav-section-label">Products</div>
+      <div class="nav-item" onclick="adminNav('upload',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Upload Product
+      </div>
+      <div class="nav-item" onclick="adminNav('manage',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Manage Products
+      </div>
+
+      <div class="nav-section-label">Insights</div>
+      <div class="nav-item" onclick="adminNav('analytics',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Analytics
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="admin-avatar">M</div>
+        <div>
+          <div style="font-size:0.86rem;font-weight:500;" id="admin-sidebar-name">moyes</div>
+          <small>Admin</small>
+        </div>
+      </div>
+      <button class="btn-secondary btn-icon" style="width:100%;margin-top:12px;justify-content:center;" onclick="doLogout()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="sidebar-toggle" id="admin-sidebar-toggle" onclick="openSidebar('admin')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="topbar-title" id="admin-topbar-title">Dashboard</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" onclick="toggleTheme()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- Panel: Overview -->
+      <div class="panel active" id="admin-panel-overview">
+        <div class="stat-grid" id="admin-stats"></div>
+        <div class="card">
+          <div class="card-title">Recent Products</div>
+          <div style="overflow-x:auto;">
+            <table class="data-table" id="admin-recent-table">
+              <thead><tr><th>Product</th><th>Price</th><th>Likes</th><th>Added</th></tr></thead>
+              <tbody id="admin-recent-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Upload -->
+      <div class="panel" id="admin-panel-upload">
+        <div class="card">
+          <div class="card-title">Upload New Product</div>
+          <div class="upload-grid">
+
+            <!-- Image Upload -->
+            <div class="image-upload-zone" id="admin-upload-zone" onclick="document.getElementById('admin-img-input').click()">
+              <img class="image-preview hidden" id="admin-img-preview" alt="Preview" />
+              <div class="upload-zone-text" id="admin-upload-text">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;opacity:0.4;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <strong style="display:block;margin-bottom:4px;">Click to upload shoe image</strong>
+                PNG, JPG, WebP up to 5MB
+              </div>
+              <input type="file" id="admin-img-input" accept="image/*" hidden onchange="previewAdminImage(event)" />
+            </div>
+
+            <!-- Name -->
+            <div class="form-group">
+              <label>Product Name *</label>
+              <input type="text" id="admin-prod-name" placeholder="e.g. Air Jordan 1 Retro High OG" />
+            </div>
+
+            <!-- Price -->
+            <div class="form-group">
+              <label>Price (KES) *</label>
+              <input type="number" id="admin-prod-price" placeholder="e.g. 12500" min="0" />
+            </div>
+
+            <!-- Description -->
+            <div class="form-group" style="grid-column:1/-1;">
+              <label>Description</label>
+              <textarea id="admin-prod-desc" rows="4" placeholder="Product description — or use AI to generate one…"></textarea>
+              <div class="ai-toolbar">
+                <button class="btn-ai" id="btn-ai-desc" onclick="aiGenerateDesc()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  AI Description
+                </button>
+                <button class="btn-ai" id="btn-ai-cat" onclick="aiGenerateCategory()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                  AI Category
+                </button>
+                <button class="btn-ai" id="btn-ai-enhance" onclick="aiEnhanceListing()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  Enhance Listing
+                </button>
+              </div>
+            </div>
+
+            <!-- AI Output -->
+            <div id="ai-result-box" class="hidden" style="grid-column:1/-1;">
+              <div class="card" style="margin-bottom:0;background:var(--bg-elevated);">
+                <div class="card-title" style="font-size:0.9rem;margin-bottom:10px;">
+                  <span style="color:var(--accent-purple);">✦</span> AI Analysis
+                </div>
+                <div id="ai-result-content" style="font-size:0.84rem;color:var(--text-sub);line-height:1.75;"></div>
+              </div>
+            </div>
+
+            <!-- Post Button -->
+            <div style="grid-column:1/-1;display:flex;gap:12px;flex-wrap:wrap;">
+              <button class="btn-primary" style="width:auto;padding:13px 36px;" onclick="adminPostProduct()">
+                Post Product
+              </button>
+              <button class="btn-secondary" onclick="clearAdminForm()">Clear Form</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Manage -->
+      <div class="panel" id="admin-panel-manage">
+        <div class="card">
+          <div class="card-title">All Products</div>
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead><tr><th>Image</th><th>Name</th><th>Price</th><th>Likes</th><th>Posted</th><th>Actions</th></tr></thead>
+              <tbody id="admin-manage-tbody"></tbody>
+            </table>
+          </div>
+          <div id="admin-manage-empty" class="empty-state hidden">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <h3>No products yet</h3>
+            <p>Upload your first product to get started.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Analytics -->
+      <div class="panel" id="admin-panel-analytics">
+        <div class="stat-grid" id="analytics-stats"></div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="card-title" style="font-size:1rem;margin-bottom:14px;">Likes per Product</div>
+            <canvas id="chart-likes" height="220"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="card-title" style="font-size:1rem;margin-bottom:14px;">Category Popularity</div>
+            <canvas id="chart-categories" height="220"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="card-title" style="font-size:1rem;margin-bottom:14px;">Upload Trend</div>
+            <canvas id="chart-uploads" height="220"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="card-title" style="font-size:1rem;margin-bottom:14px;">Engagement Over Time</div>
+            <canvas id="chart-engagement" height="220"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /admin-content -->
+  </div><!-- /admin-main -->
+</div><!-- /view-admin -->
+
+<!-- ══════════════════════════════════════════════════════════════
+     VIEW: SUPER ADMIN DASHBOARD
+══════════════════════════════════════════════════════════════ -->
+<div id="view-super" class="view">
+
+  <div class="sidebar-overlay" id="super-sidebar-overlay" onclick="closeSidebar('super')"></div>
+
+  <aside class="sidebar" id="super-sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-name">Mos Kicks Kaloito</div>
+      <div class="sidebar-brand-sub" style="color:var(--accent-purple);">Super Admin</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+      <div class="nav-item active" onclick="superNav('overview',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+
+      <div class="nav-section-label">Products</div>
+      <div class="nav-item" onclick="superNav('upload',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Upload Product
+      </div>
+      <div class="nav-item" onclick="superNav('manage',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Manage Products
+      </div>
+
+      <div class="nav-section-label">Intelligence</div>
+      <div class="nav-item" onclick="superNav('agents',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2a10 10 0 0 0-10 10"/><path d="M12 22a10 10 0 0 0 10-10"/><path d="M12 22a10 10 0 0 1-10-10"/></svg>
+        AI Agents
+      </div>
+      <div class="nav-item" onclick="superNav('workflow',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        ChainAgents
+      </div>
+
+      <div class="nav-section-label">Insights</div>
+      <div class="nav-item" onclick="superNav('analytics',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Analytics
+      </div>
+
+      <div class="nav-section-label">System</div>
+      <div class="nav-item" onclick="superNav('settings',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" style="background:rgba(155,127,232,0.18);border-color:rgba(155,127,232,0.4);color:var(--accent-purple);">S</div>
+        <div>
+          <div style="font-size:0.86rem;font-weight:500;">sblgivan</div>
+          <small style="color:var(--accent-purple);">Super Admin</small>
+        </div>
+      </div>
+      <button class="btn-secondary btn-icon" style="width:100%;margin-top:12px;justify-content:center;" onclick="doLogout()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="sidebar-toggle" id="super-sidebar-toggle" onclick="openSidebar('super')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="topbar-title" id="super-topbar-title">Dashboard</span>
+      </div>
+      <div class="topbar-actions">
+        <span class="tag tag-purple">Engineer</span>
+        <button class="icon-btn" onclick="toggleTheme()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- Panel: Overview (same as admin) -->
+      <div class="panel active" id="super-panel-overview">
+        <div class="stat-grid" id="super-stats"></div>
+        <div class="card">
+          <div class="card-title">Recent Products</div>
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead><tr><th>Product</th><th>Price</th><th>Likes</th><th>Added</th></tr></thead>
+              <tbody id="super-recent-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Upload (shared) -->
+      <div class="panel" id="super-panel-upload">
+        <div class="card">
+          <div class="card-title">Upload New Product</div>
+          <div class="upload-grid">
+            <div class="image-upload-zone" id="super-upload-zone" onclick="document.getElementById('super-img-input').click()">
+              <img class="image-preview hidden" id="super-img-preview" alt="Preview" />
+              <div class="upload-zone-text" id="super-upload-text">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;opacity:0.4;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <strong style="display:block;margin-bottom:4px;">Click to upload shoe image</strong>
+                PNG, JPG, WebP up to 5MB
+              </div>
+              <input type="file" id="super-img-input" accept="image/*" hidden onchange="previewSuperImage(event)" />
+            </div>
+            <div class="form-group">
+              <label>Product Name *</label>
+              <input type="text" id="super-prod-name" placeholder="e.g. Air Jordan 1 Retro High OG" />
+            </div>
+            <div class="form-group">
+              <label>Price (KES) *</label>
+              <input type="number" id="super-prod-price" placeholder="e.g. 12500" min="0" />
+            </div>
+            <div class="form-group" style="grid-column:1/-1;">
+              <label>Description</label>
+              <textarea id="super-prod-desc" rows="4" placeholder="Product description — or use AI…"></textarea>
+              <div class="ai-toolbar">
+                <button class="btn-ai" onclick="superAiDesc()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  AI Description
+                </button>
+                <button class="btn-ai" onclick="superAiCat()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                  AI Category
+                </button>
+                <button class="btn-ai" onclick="superAiEnhance()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  Enhance Listing
+                </button>
+              </div>
+            </div>
+            <div id="super-ai-result-box" class="hidden" style="grid-column:1/-1;">
+              <div class="card" style="margin-bottom:0;background:var(--bg-elevated);">
+                <div class="card-title" style="font-size:0.9rem;margin-bottom:10px;"><span style="color:var(--accent-purple);">✦</span> AI Analysis</div>
+                <div id="super-ai-result-content" style="font-size:0.84rem;color:var(--text-sub);line-height:1.75;"></div>
+              </div>
+            </div>
+            <div style="grid-column:1/-1;display:flex;gap:12px;flex-wrap:wrap;">
+              <button class="btn-primary" style="width:auto;padding:13px 36px;" onclick="superPostProduct()">Post Product</button>
+              <button class="btn-secondary" onclick="clearSuperForm()">Clear Form</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Manage -->
+      <div class="panel" id="super-panel-manage">
+        <div class="card">
+          <div class="card-title">All Products</div>
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead><tr><th>Image</th><th>Name</th><th>Price</th><th>Likes</th><th>Posted</th><th>Actions</th></tr></thead>
+              <tbody id="super-manage-tbody"></tbody>
+            </table>
+          </div>
+          <div id="super-manage-empty" class="empty-state hidden">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <h3>No products yet</h3>
+            <p>Upload your first product.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: AI Agents -->
+      <div class="panel" id="super-panel-agents">
+        <div class="card">
+          <div class="card-title">Agent Files</div>
+          <p style="font-size:0.84rem;color:var(--text-sub);margin-bottom:18px;">Upload <code>.md</code> agent configuration files to register new agents.</p>
+          <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap;">
+            <button class="btn-secondary btn-icon" onclick="document.getElementById('agent-file-input').click()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Upload .md File
+            </button>
+            <input type="file" id="agent-file-input" accept=".md" hidden onchange="uploadAgentFile(event)" />
+          </div>
+          <ul class="agent-file-list" id="agent-file-list"></ul>
+        </div>
+
+        <div class="card-title" style="margin-bottom:16px;">Available Agents</div>
+        <div class="agent-grid" id="agents-grid"></div>
+
+        <div class="card">
+          <div class="card-title">Agent Output</div>
+          <div class="agent-output" id="agent-output-log">
+<span class="log-gold">// Mos Kicks Kaloito Agent Runtime v1.0</span>
+<span class="log-blue">// Select an agent and click Run to begin analysis…</span>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn-primary" style="width:auto;padding:10px 24px;" onclick="runSelectedAgent()">
+              Run Selected Agent
+            </button>
+            <button class="btn-secondary" onclick="clearAgentLog()">Clear Log</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: ChainAgents Workflow -->
+      <div class="panel" id="super-panel-workflow">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;flex-wrap:wrap;">
+          <div class="workflow-container">
+            <div class="card-title" style="margin-bottom:18px;">Workflow Builder</div>
+            <p style="font-size:0.82rem;color:var(--text-sub);margin-bottom:18px;">Chain agents to create an automated analysis pipeline.</p>
+
+            <div id="workflow-chain" class="workflow-chain">
+              <!-- Built dynamically -->
+            </div>
+
+            <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn-primary" style="width:auto;padding:10px 24px;" onclick="runWorkflow()">
+                <span id="workflow-btn-text">Run Workflow</span>
+              </button>
+              <button class="btn-secondary" onclick="resetWorkflow()">Reset</button>
+            </div>
+          </div>
+
+          <div class="workflow-container">
+            <div class="card-title" style="margin-bottom:18px;">Workflow Output</div>
+            <div class="agent-output" id="workflow-output" style="min-height:300px;">
+<span class="log-gold">// ChainAgents Workflow Engine</span>
+<span class="log-blue">// Run a workflow to see agent-to-agent output here…</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+          <div class="card-title">Workflow History</div>
+          <div id="workflow-history" style="font-size:0.82rem;color:var(--text-sub);line-height:2;">
+            <em>No workflows run yet.</em>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Analytics (same charts, different canvas IDs) -->
+      <div class="panel" id="super-panel-analytics">
+        <div class="stat-grid" id="super-analytics-stats"></div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="card-title" style="font-size:1rem;margin-bottom:14px;">Likes per Product</div>
+            <canvas id="super-chart-likes" height="220"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="card-title" style="font-size:1rem;margin-bottom:14px;">Category Popularity</div>
+            <canvas id="super-chart-categories" height="220"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="card-title" style="font-size:1rem;margin-bottom:14px;">Upload Trend</div>
+            <canvas id="super-chart-uploads" height="220"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="card-title" style="font-size:1rem;margin-bottom:14px;">Engagement Over Time</div>
+            <canvas id="super-chart-engagement" height="220"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="super-panel-settings">
+        <div class="card" style="max-width:560px;">
+          <div class="card-title">AI / Gemini Configuration</div>
+          <p style="font-size:0.82rem;color:var(--text-sub);margin-bottom:18px;">
+            Set the Gemini API key used by all AI agents and ChainAgents workflows. Stored locally on this device.
+          </p>
+          <div class="form-group">
+            <label>Gemini API Key</label>
+            <input type="text" id="settings-gemini-key" placeholder="Enter Gemini API key…" autocomplete="off" />
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="btn-primary" style="width:auto;padding:11px 28px;" id="btn-save-gemini-key" onclick="saveGeminiKeySetting()">Save Key</button>
+            <button class="btn-secondary" onclick="testGeminiKeySetting()">Test Connection</button>
+          </div>
+          <p id="settings-gemini-status" style="margin-top:14px;font-size:0.8rem;color:var(--text-sub);"></p>
+        </div>
+
+        <div class="card" style="max-width:560px;margin-top:24px;">
+          <div class="card-title">WhatsApp Ordering</div>
+          <p style="font-size:0.82rem;color:var(--text-sub);margin-bottom:18px;">
+            Orders placed via the "Order on WhatsApp" button will open WhatsApp pre-filled and addressed to this number.
+            Use international format (e.g. 2547XXXXXXXX), with or without a leading "+".
+          </p>
+          <div class="form-group">
+            <label>WhatsApp Recipient Number</label>
+            <input type="text" id="settings-whatsapp-number" placeholder="e.g. 254712345678" autocomplete="off" />
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="btn-primary" style="width:auto;padding:11px 28px;" id="btn-save-whatsapp-number" onclick="saveWhatsAppSetting()">Save Number</button>
+          </div>
+          <p id="settings-whatsapp-status" style="margin-top:14px;font-size:0.8rem;color:var(--text-sub);"></p>
+        </div>
+      </div>
+
+    </div><!-- /admin-content -->
+  </div><!-- /admin-main -->
+</div><!-- /view-super -->
+
+<!-- ══════════════════════════════════════════════════════════════
+     EDIT PRODUCT MODAL
+══════════════════════════════════════════════════════════════ -->
+<div class="edit-modal-overlay" id="edit-modal-overlay" onclick="closeEditModal(event)">
+  <div class="edit-modal" onclick="event.stopPropagation()">
+    <h2 style="font-family:var(--font-display);font-weight:300;font-size:1.5rem;margin-bottom:22px;">Edit Product</h2>
+    <input type="hidden" id="edit-prod-id" />
+    <div class="form-group">
+      <label>Product Name</label>
+      <input type="text" id="edit-prod-name" />
+    </div>
+    <div class="form-group">
+      <label>Price (KES)</label>
+      <input type="number" id="edit-prod-price" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="edit-prod-desc" rows="4"></textarea>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;">
+      <button class="btn-primary" style="width:auto;padding:11px 28px;" onclick="saveEditProduct()">Save Changes</button>
+      <button class="btn-secondary" onclick="closeEditModalBtn()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════════════ -->
+<script>
+/* ════════════════════════════════════════════════════════════════
+   CONFIG
+════════════════════════════════════════════════════════════════ */
+const GEMINI_DEFAULT_KEY = "YOUR_GEMINI_API_KEY";
+function getGeminiKey() {
+  return localStorage.getItem("lm_gemini_key") || GEMINI_DEFAULT_KEY;
+}
+function setGeminiKey(key) {
+  localStorage.setItem("lm_gemini_key", key);
+}
+function getGeminiUrl() {
+  return "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + getGeminiKey();
+}
+
+function renderGeminiSettings() {
+  const input = document.getElementById("settings-gemini-key");
+  if (!input) return;
+  const stored = localStorage.getItem("lm_gemini_key");
+  input.value = stored || "";
+  const status = document.getElementById("settings-gemini-status");
+  status.textContent = stored
+    ? "Custom key currently active."
+    : "Using default placeholder key — set a real key to enable AI agents.";
+}
+
+function saveGeminiKeySetting() {
+  const input = document.getElementById("settings-gemini-key");
+  const btn = document.getElementById("btn-save-gemini-key");
+  const key = input.value.trim();
+  if (!key) { showToast("Enter a Gemini API key.", "error"); return; }
+
+  setBtnLoading(btn, true, "Saving…");
+  setTimeout(() => {
+    setGeminiKey(key);
+    setBtnLoading(btn, false);
+    document.getElementById("settings-gemini-status").textContent = "Custom key saved and active.";
+    showToast("Gemini API key saved!", "success");
+  }, 400);
+}
+
+async function testGeminiKeySetting() {
+  const status = document.getElementById("settings-gemini-status");
+  status.innerHTML = '<span class="spinner"></span> Testing connection…';
+  try {
+    const result = await callGemini("Reply with the single word: OK");
+    status.textContent = result.trim()
+      ? "✅ Connection successful — Gemini responded."
+      : "⚠️ Connected, but received an empty response.";
+    showToast("Gemini connection test complete.", "success");
+  } catch (err) {
+    status.textContent = "❌ Connection failed: " + err.message;
+    showToast("Gemini connection failed.", "error");
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   WHATSAPP ORDERING SETTINGS (Admin 2 / Super only)
+════════════════════════════════════════════════════════════════ */
+function renderWhatsAppSettings() {
+  const input = document.getElementById("settings-whatsapp-number");
+  if (!input) return;
+  const stored = getWhatsAppNumber();
+  input.value = stored || "";
+  const status = document.getElementById("settings-whatsapp-status");
+  status.textContent = stored
+    ? "Active — orders will be sent to " + stored + "."
+    : "No number set yet — the WhatsApp order button will be disabled for customers.";
+}
+
+function saveWhatsAppSetting() {
+  const input = document.getElementById("settings-whatsapp-number");
+  const btn = document.getElementById("btn-save-whatsapp-number");
+  const raw = input.value.trim();
+  if (!raw) { showToast("Enter a WhatsApp number.", "error"); return; }
+
+  const normalized = normalizeWhatsAppNumber(raw);
+  if (normalized.length < 9) { showToast("That doesn't look like a valid phone number.", "error"); return; }
+
+  setBtnLoading(btn, true, "Saving…");
+  setTimeout(() => {
+    setWhatsAppNumber(normalized);
+    input.value = normalized;
+    setBtnLoading(btn, false);
+    document.getElementById("settings-whatsapp-status").textContent =
+      "Active — orders will be sent to " + normalized + ".";
+    showToast("WhatsApp order number saved!", "success");
+  }, 350);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   AUTH CREDENTIALS
+════════════════════════════════════════════════════════════════ */
+const ADMINS = {
+  admin1: { username: "moyes",             phone: "0712009646",  view: "admin" },
+  admin2: { username: "sblgivan@gmail.com", phone: "0769743249", view: "super" }
+};
+
+/* ════════════════════════════════════════════════════════════════
+   DATA LAYER  — localStorage helpers
+════════════════════════════════════════════════════════════════ */
+function getProducts() {
+  try { return JSON.parse(localStorage.getItem("lm_products") || "[]"); }
+  catch { return []; }
+}
+
+function saveProducts(arr) {
+  localStorage.setItem("lm_products", JSON.stringify(arr));
+}
+
+function getLikes() {
+  try { return JSON.parse(localStorage.getItem("lm_likes") || "{}"); }
+  catch { return {}; }
+}
+
+function saveLikes(obj) {
+  localStorage.setItem("lm_likes", JSON.stringify(obj));
+}
+
+/* ────── WHATSAPP ORDERING ────── */
+function getWhatsAppNumber() {
+  return localStorage.getItem("lm_whatsapp_number") || "";
+}
+
+function setWhatsAppNumber(number) {
+  localStorage.setItem("lm_whatsapp_number", number);
+}
+
+/* Normalize a phone number into wa.me format (digits only, no +, no leading 0) */
+function normalizeWhatsAppNumber(raw) {
+  let digits = String(raw || "").replace(/[^\d+]/g, "");
+  digits = digits.replace(/\+/g, "");
+  // Convert local Kenyan-style numbers starting with 0 to 254-prefixed
+  if (digits.startsWith("0")) digits = "254" + digits.slice(1);
+  return digits;
+}
+
+function getAgentFiles() {
+  try { return JSON.parse(localStorage.getItem("lm_agents") || "[]"); }
+  catch { return []; }
+}
+
+function saveAgentFiles(arr) {
+  localStorage.setItem("lm_agents", JSON.stringify(arr));
+}
+
+function getWorkflowHistory() {
+  try { return JSON.parse(localStorage.getItem("lm_wf_history") || "[]"); }
+  catch { return []; }
+}
+
+function saveWorkflowHistory(arr) {
+  localStorage.setItem("lm_wf_history", JSON.stringify(arr));
+}
+
+/* Generate unique ID */
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+/* Friendly relative time */
+function relTime(ts) {
+  const diff = Date.now() - ts;
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return "just now";
+  if (m < 60) return m + "m ago";
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + "h ago";
+  const d = Math.floor(h / 24);
+  return d + "d ago";
+}
+
+/* Format price */
+function fmt(n) {
+  return "KES " + Number(n).toLocaleString();
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SEED DATA — shown if no products exist
+════════════════════════════════════════════════════════════════ */
+function seedProducts() {
+  const existing = getProducts();
+  if (existing.length > 0) return;
+
+  const seed = [
+    {
+      id: uid(), name: "Air Jordan 1 Retro High OG", price: 18500,
+      description: "Iconic basketball silhouette with premium leather upper, Air cushioning, and heritage colorway. A timeless streetwear staple.",
+      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80",
+      category: "Sneakers", postedBy: "moyes", likes: 42, timestamp: Date.now() - 86400000 * 3
+    },
+    {
+      id: uid(), name: "Common Projects Achilles Low", price: 24000,
+      description: "Minimalist luxury sneaker crafted from full-grain Italian leather. Gold serial stamp, rubber sole. The quiet flex.",
+      image: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=600&q=80",
+      category: "Luxury Sneakers", postedBy: "moyes", likes: 38, timestamp: Date.now() - 86400000 * 5
+    },
+    {
+      id: uid(), name: "Clarks Desert Boot", price: 9800,
+      description: "Two-eyelet suede boot on crepe sole. An enduring design since 1950. Pairs with everything from tailoring to denim.",
+      image: "https://images.unsplash.com/photo-1638247025967-b4e38f787b76?w=600&q=80",
+      category: "Boots", postedBy: "moyes", likes: 21, timestamp: Date.now() - 86400000 * 7
+    },
+    {
+      id: uid(), name: "New Balance 990v5", price: 16200,
+      description: "Heritage running shoe, ENCAP midsole technology. Made in USA. The dad shoe that started it all.",
+      image: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=600&q=80",
+      category: "Running", postedBy: "moyes", likes: 55, timestamp: Date.now() - 86400000 * 1
+    },
+    {
+      id: uid(), name: "Gucci Horsebit Loafer", price: 78000,
+      description: "Embroidered moccasin with signature GG canvas and horsebit hardware. Italian craftsmanship at its finest.",
+      image: "https://images.unsplash.com/photo-1518049362265-d5b2a6467637?w=600&q=80",
+      category: "Luxury", postedBy: "sblgivan@gmail.com", likes: 89, timestamp: Date.now() - 86400000 * 2
+    },
+    {
+      id: uid(), name: "Adidas Ultraboost 23", price: 13500,
+      description: "Responsive Boost midsole, Primeknit upper, Continental rubber outsole. The performance sneaker reimagined for the street.",
+      image: "https://images.unsplash.com/photo-1465453869711-7e174808ace9?w=600&q=80",
+      category: "Running", postedBy: "moyes", likes: 33, timestamp: Date.now() - 86400000 * 4
+    }
+  ];
+
+  saveProducts(seed);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   VIEW MANAGEMENT
+════════════════════════════════════════════════════════════════ */
+function showView(id) {
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  const v = document.getElementById("view-" + id);
+  if (v) v.classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   AUTHENTICATION
+════════════════════════════════════════════════════════════════ */
+function handleLogin() {
+  const user  = document.getElementById("login-user").value.trim();
+  const phone = document.getElementById("login-phone").value.trim();
+
+  if (!user || !phone) { showToast("Please enter your name and phone number.", "error"); return; }
+
+  // Check Admin 1
+  if (user === ADMINS.admin1.username && phone === ADMINS.admin1.phone) {
+    localStorage.setItem("lm_session", JSON.stringify({ role: "admin", username: user }));
+    initAdminDashboard();
+    showView("admin");
+    showToast("Welcome back, " + user + "!", "success");
+    return;
+  }
+
+  // Check Admin 2 (Super)
+  if (user === ADMINS.admin2.username && phone === ADMINS.admin2.phone) {
+    localStorage.setItem("lm_session", JSON.stringify({ role: "super", username: user }));
+    initSuperDashboard();
+    showView("super");
+    showToast("Welcome, Software Engineer!", "success");
+    return;
+  }
+
+  // Regular user
+  localStorage.setItem("lm_session", JSON.stringify({ role: "user", username: user }));
+  renderUserFeed();
+  renderTrending();
+  renderHero();
+  renderRecent();
+  showView("user");
+  showToast("Welcome to Mos Kicks Kaloito, " + user + "!", "success");
+}
+
+function doLogout() {
+  localStorage.removeItem("lm_session");
+  showView("login");
+  showToast("Signed out successfully.", "info");
+}
+
+/* Check existing session on load */
+function checkSession() {
+  const raw = localStorage.getItem("lm_session");
+  if (!raw) return;
+  try {
+    const s = JSON.parse(raw);
+    if (s.role === "admin") { initAdminDashboard(); showView("admin"); }
+    else if (s.role === "super") { initSuperDashboard(); showView("super"); }
+    else { renderUserFeed(); renderTrending(); renderHero(); renderRecent(); showView("user"); }
+  } catch { /* ignore */ }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   TOAST NOTIFICATIONS
+════════════════════════════════════════════════════════════════ */
+function showToast(msg, type = "info") {
+  const icons = {
+    success: "✓",
+    error: "✕",
+    info: "✦"
+  };
+
+  const toast = document.createElement("div");
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `
+    <div class="toast-icon">${icons[type] || "✦"}</div>
+    <div class="toast-text">${msg}</div>
+  `;
+
+  const container = document.getElementById("toast-container");
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("out");
+    setTimeout(() => toast.remove(), 320);
+  }, 3500);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   THEME TOGGLE
+════════════════════════════════════════════════════════════════ */
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute("data-theme");
+  const next = current === "dark" ? "light" : "dark";
+  html.setAttribute("data-theme", next);
+  localStorage.setItem("lm_theme", next);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   USER HOMEPAGE
+════════════════════════════════════════════════════════════════ */
+let userPage = 1;
+const ITEMS_PER_PAGE = 12;
+let activeCategory = "all";
+
+function getSession() {
+  try { return JSON.parse(localStorage.getItem("lm_session") || "{}"); }
+  catch { return {}; }
+}
+
+function renderHero() {
+  const products = getProducts();
+  if (!products.length) return;
+  const top = [...products].sort((a, b) => b.likes - a.likes)[0];
+  const frame = document.getElementById("hero-frame");
+  if (top && top.image) {
+    frame.innerHTML = `<img src="${top.image}" alt="${top.name}" style="width:100%;height:100%;object-fit:cover;" />`;
+  }
+}
+
+function renderTrending() {
+  const products = getProducts();
+  const categories = ["all", ...new Set(products.map(p => p.category).filter(Boolean))];
+  const strip = document.getElementById("trending-strip");
+
+  strip.innerHTML = categories.map(c => `
+    <div class="trending-chip ${c === activeCategory ? 'active' : ''}" onclick="filterCategory('${c}')">
+      ${c === "all" ? "🔥 All" : c}
+    </div>
+  `).join("");
+}
+
+function filterCategory(cat) {
+  activeCategory = cat;
+  userPage = 1;
+  renderTrending();
+  renderUserFeed();
+}
+
+function renderUserFeed() {
+  const products = getProducts();
+  const query = (document.getElementById("user-search")?.value || "").toLowerCase();
+  const sort  = document.getElementById("sort-select")?.value || "newest";
+  const likes = getLikes();
+  const session = getSession();
+
+  let filtered = products.filter(p => {
+    const matchCat = activeCategory === "all" || p.category === activeCategory;
+    const matchQ   = !query || p.name.toLowerCase().includes(query) || (p.description || "").toLowerCase().includes(query);
+    return matchCat && matchQ;
+  });
+
+  // Sort
+  if (sort === "oldest")     filtered.sort((a, b) => a.timestamp - b.timestamp);
+  else if (sort === "price-low") filtered.sort((a, b) => a.price - b.price);
+  else if (sort === "price-high") filtered.sort((a, b) => b.price - a.price);
+  else if (sort === "likes") filtered.sort((a, b) => b.likes - a.likes);
+  else filtered.sort((a, b) => b.timestamp - a.timestamp); // newest
+
+  const feed  = document.getElementById("user-feed");
+  const empty = document.getElementById("user-feed-empty");
+  const pgn   = document.getElementById("user-pagination");
+
+  const total  = filtered.length;
+  const pages  = Math.ceil(total / ITEMS_PER_PAGE);
+  userPage = Math.min(userPage, pages || 1);
+  const start  = (userPage - 1) * ITEMS_PER_PAGE;
+  const paged  = filtered.slice(start, start + ITEMS_PER_PAGE);
+
+  if (!paged.length) {
+    feed.innerHTML = "";
+    empty.classList.remove("hidden");
+    pgn.innerHTML = "";
+    return;
+  }
+
+  empty.classList.add("hidden");
+  feed.innerHTML = paged.map(p => productCardHTML(p, likes, session)).join("");
+
+  // Pagination
+  if (pages > 1) {
+    pgn.innerHTML = Array.from({length: pages}, (_, i) => `
+      <button class="page-btn ${i + 1 === userPage ? 'active' : ''}" onclick="goPage(${i + 1})">${i + 1}</button>
+    `).join("");
+  } else {
+    pgn.innerHTML = "";
+  }
+}
+
+function goPage(n) { userPage = n; renderUserFeed(); window.scrollTo({top: document.getElementById("feed-section").offsetTop - 80, behavior: "smooth"}); }
+
+function renderRecent() {
+  const products = getProducts();
+  const recent = [...products].sort((a, b) => b.timestamp - a.timestamp).slice(0, 4);
+  const likes = getLikes();
+  const session = getSession();
+  const el = document.getElementById("recent-feed");
+  el.innerHTML = recent.map(p => productCardHTML(p, likes, session)).join("");
+}
+
+/* Build product card HTML */
+function productCardHTML(p, likes, session) {
+  const liked = likes[session.username + "_" + p.id];
+  const isNew = (Date.now() - p.timestamp) < 86400000 * 3;
+  return `
+    <div class="product-card" onclick="openProductModal('${p.id}')">
+      <div class="product-img-wrap">
+        <img src="${p.image || ''}" alt="${p.name}" loading="lazy"
+          onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><rect fill=%22%2318181f%22 width=%22200%22 height=%22200%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23555%22 font-size=%2240%22>👟</text></svg>'" />
+        ${isNew ? '<span class="product-badge">New</span>' : ''}
+      </div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-posted-by">by ${p.postedBy}</div>
+        <div class="product-desc">${p.description || "Premium footwear from our curated collection."}</div>
+        <div class="product-footer">
+          <div class="product-price">${fmt(p.price)}</div>
+          <button class="like-btn ${liked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${p.id}', this)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="${liked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            ${p.likes || 0}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ────── LIKES ────── */
+function toggleLike(productId, btn) {
+  const session = getSession();
+  const key = session.username + "_" + productId;
+  const likes = getLikes();
+  const products = getProducts();
+
+  const prod = products.find(p => p.id === productId);
+  if (!prod) return;
+
+  if (likes[key]) {
+    delete likes[key];
+    prod.likes = Math.max(0, (prod.likes || 1) - 1);
+    btn.classList.remove("liked");
+  } else {
+    likes[key] = true;
+    prod.likes = (prod.likes || 0) + 1;
+    btn.classList.add("liked");
+  }
+
+  saveLikes(likes);
+  saveProducts(products);
+
+  // Update count in button
+  const svg = btn.querySelector("svg");
+  btn.innerHTML = "";
+  btn.appendChild(svg);
+  btn.appendChild(document.createTextNode(" " + prod.likes));
+
+  svg.setAttribute("fill", likes[key] ? "currentColor" : "none");
+}
+
+/* ════════════════════════════════════════════════════════════════
+   PRODUCT DETAIL MODAL
+════════════════════════════════════════════════════════════════ */
+let modalProductId = null;
+
+function openProductModal(id) {
+  const products = getProducts();
+  const p = products.find(pr => pr.id === id);
+  if (!p) return;
+
+  modalProductId = id;
+  const likes = getLikes();
+  const session = getSession();
+  const liked = likes[session.username + "_" + id];
+
+  document.getElementById("modal-img").src = p.image || "";
+  document.getElementById("modal-img").alt = p.name;
+  document.getElementById("modal-category").textContent = p.category || "Footwear";
+  document.getElementById("modal-name").textContent = p.name;
+  document.getElementById("modal-price").textContent = fmt(p.price);
+  document.getElementById("modal-desc").textContent = p.description || "Premium footwear from our curated collection.";
+  document.getElementById("modal-seller").textContent = "Posted by " + p.postedBy;
+  document.getElementById("modal-time").textContent = relTime(p.timestamp);
+  document.getElementById("modal-like-count").textContent = p.likes || 0;
+
+  const likeBtn = document.getElementById("modal-like-btn");
+  likeBtn.className = "like-btn w-full" + (liked ? " liked" : "");
+
+  const waBtn = document.getElementById("modal-whatsapp-btn");
+  if (waBtn) {
+    const hasNumber = !!getWhatsAppNumber();
+    waBtn.style.opacity = hasNumber ? "1" : "0.55";
+    waBtn.title = hasNumber ? "" : "WhatsApp ordering not configured yet";
+  }
+
+  document.getElementById("product-modal-overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeProductModal(e) {
+  if (e.target === document.getElementById("product-modal-overlay")) closeProductModalBtn();
+}
+
+function closeProductModalBtn() {
+  document.getElementById("product-modal-overlay").classList.remove("open");
+  document.body.style.overflow = "";
+  modalProductId = null;
+}
+
+function modalLike() {
+  if (!modalProductId) return;
+  const btn = document.getElementById("modal-like-btn");
+  toggleLike(modalProductId, btn);
+  // Re-sync count display
+  const products = getProducts();
+  const p = products.find(pr => pr.id === modalProductId);
+  if (p) document.getElementById("modal-like-count").textContent = p.likes;
+  renderUserFeed();
+  renderRecent();
+}
+
+/* ────── ORDER VIA WHATSAPP ────── */
+function orderViaWhatsApp() {
+  if (!modalProductId) return;
+
+  const number = getWhatsAppNumber();
+  if (!number) {
+    showToast("Ordering via WhatsApp isn't set up yet. Please contact the seller directly.", "error");
+    return;
+  }
+
+  const products = getProducts();
+  const p = products.find(pr => pr.id === modalProductId);
+  if (!p) return;
+
+  const lines = [
+    "Hello! I'd like to order the following item from Mos Kicks Kaloito:",
+    "",
+    "🛍️ Item: " + p.name,
+    "💰 Price: " + fmt(p.price),
+    "📦 Category: " + (p.category || "Footwear"),
+    "👤 Posted by: " + (p.postedBy || "—"),
+    "",
+    "Please let me know if it's available and how to proceed. Thank you!"
+  ];
+  const message = lines.join("\n");
+
+  const url = "https://wa.me/" + number + "?text=" + encodeURIComponent(message);
+  window.open(url, "_blank");
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ADMIN DASHBOARD
+════════════════════════════════════════════════════════════════ */
+function adminNav(panel, el) {
+  document.querySelectorAll("#view-admin .nav-item").forEach(n => n.classList.remove("active"));
+  el.classList.add("active");
+  document.querySelectorAll("#view-admin .panel").forEach(p => p.classList.remove("active"));
+  document.getElementById("admin-panel-" + panel).classList.add("active");
+  document.getElementById("admin-topbar-title").textContent = el.textContent.trim();
+  if (panel === "analytics") renderAnalyticsCharts("admin");
+  if (panel === "manage") renderManageTable("admin");
+  if (panel === "overview") renderAdminOverview();
+  closeSidebar("admin");
+}
+
+function initAdminDashboard() {
+  renderAdminOverview();
+}
+
+function renderAdminOverview() {
+  const products = getProducts();
+  const totalLikes = products.reduce((s, p) => s + (p.likes || 0), 0);
+  const topProd = [...products].sort((a, b) => b.likes - a.likes)[0];
+  const session = getSession();
+
+  document.getElementById("admin-sidebar-name").textContent = session.username || "Admin";
+  document.getElementById("admin-avatar").textContent = (session.username || "A")[0].toUpperCase();
+
+  document.getElementById("admin-stats").innerHTML = `
+    ${statCard("📦", products.length, "Total Products")}
+    ${statCard("❤️", totalLikes, "Total Likes")}
+    ${statCard("🏆", topProd ? topProd.likes : 0, "Top Product Likes")}
+    ${statCard("📅", products.filter(p => Date.now() - p.timestamp < 86400000 * 7).length, "Added This Week")}
+  `;
+
+  const recent = [...products].sort((a, b) => b.timestamp - a.timestamp).slice(0, 5);
+  document.getElementById("admin-recent-tbody").innerHTML = recent.map(p => `
+    <tr>
+      <td><strong style="color:var(--text);">${p.name}</strong></td>
+      <td>${fmt(p.price)}</td>
+      <td>${p.likes || 0}</td>
+      <td>${relTime(p.timestamp)}</td>
+    </tr>
+  `).join("") || '<tr><td colspan="4" style="text-align:center;color:var(--muted);">No products yet</td></tr>';
+}
+
+function statCard(icon, value, label) {
+  return `
+    <div class="stat-card">
+      <div class="stat-card-icon">${icon}</div>
+      <div class="stat-card-value">${value}</div>
+      <div class="stat-card-label">${label}</div>
+    </div>
+  `;
+}
+
+/* ─── IMAGE PREVIEW ─── */
+function previewAdminImage(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    document.getElementById("admin-img-preview").src = ev.target.result;
+    document.getElementById("admin-img-preview").classList.remove("hidden");
+    document.getElementById("admin-upload-text").classList.add("hidden");
+    document.getElementById("admin-upload-zone").classList.add("has-image");
+  };
+  reader.readAsDataURL(file);
+}
+
+function previewSuperImage(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    document.getElementById("super-img-preview").src = ev.target.result;
+    document.getElementById("super-img-preview").classList.remove("hidden");
+    document.getElementById("super-upload-text").classList.add("hidden");
+    document.getElementById("super-upload-zone").classList.add("has-image");
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ─── AI GEMINI CALLS ─── */
+async function callGemini(prompt) {
+  const res = await fetch(getGeminiUrl(), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }]
+    })
+  });
+  if (!res.ok) throw new Error("Gemini API error: " + res.status);
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+}
+
+async function aiGenerateDesc() {
+  const name = document.getElementById("admin-prod-name").value.trim();
+  const btn = document.getElementById("btn-ai-desc");
+  if (!name) { showToast("Enter a product name first.", "error"); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Generating…';
+  try {
+    const prompt = `You are a luxury footwear copywriter. Given this shoe: "${name}". Generate: shoe type, professional marketing description (2-3 sentences), target audience, recommended usage, and product category. Format as clean text without markdown.`;
+    const result = await callGemini(prompt);
+    document.getElementById("admin-prod-desc").value = result;
+    document.getElementById("ai-result-content").textContent = result;
+    document.getElementById("ai-result-box").classList.remove("hidden");
+    showToast("AI description generated!", "success");
+  } catch (err) {
+    showToast("AI error: " + err.message, "error");
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> AI Description';
+}
+
+async function aiGenerateCategory() {
+  const name = document.getElementById("admin-prod-name").value.trim();
+  const desc = document.getElementById("admin-prod-desc").value.trim();
+  const btn = document.getElementById("btn-ai-cat");
+  if (!name) { showToast("Enter a product name first.", "error"); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Analyzing…';
+  try {
+    const prompt = `Analyze this shoe: "${name}". ${desc ? 'Description: ' + desc : ''}. Classify into ONE category from: [Sneakers, Running, Boots, Luxury, Sandals, Loafers, Formal, Athletic, Casual, Limited Edition]. Reply with only the category name.`;
+    const result = await callGemini(prompt);
+    const cat = result.trim().replace(/[^a-zA-Z\s]/g, "");
+    document.getElementById("ai-result-content").textContent = "Category: " + cat;
+    document.getElementById("ai-result-box").classList.remove("hidden");
+    showToast("Category: " + cat, "info");
+  } catch (err) {
+    showToast("AI error: " + err.message, "error");
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg> AI Category';
+}
+
+async function aiEnhanceListing() {
+  const name = document.getElementById("admin-prod-name").value.trim();
+  const desc = document.getElementById("admin-prod-desc").value.trim();
+  const price = document.getElementById("admin-prod-price").value;
+  const btn = document.getElementById("btn-ai-enhance");
+  if (!name) { showToast("Enter product details first.", "error"); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Enhancing…';
+  try {
+    const prompt = `You are a luxury footwear specialist. Enhance this product listing:
+Name: ${name}
+Price: ${price ? 'KES ' + price : 'Not set'}
+Current description: ${desc || 'None'}
+
+Provide: 1) Enhanced description (3-4 sentences, luxury tone) 2) Target audience 3) Key selling points (3 bullet points) 4) Recommended category. Be concise and professional.`;
+    const result = await callGemini(prompt);
+    document.getElementById("admin-prod-desc").value = result;
+    document.getElementById("ai-result-content").textContent = result;
+    document.getElementById("ai-result-box").classList.remove("hidden");
+    showToast("Listing enhanced successfully!", "success");
+  } catch (err) {
+    showToast("AI error: " + err.message, "error");
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Enhance Listing';
+}
+
+/* Same AI functions for super admin (reuse with different field IDs) */
+async function superAiDesc() {
+  const name = document.getElementById("super-prod-name").value.trim();
+  if (!name) { showToast("Enter a product name first.", "error"); return; }
+  try {
+    const prompt = `Luxury footwear copywriter. Shoe: "${name}". Generate: shoe type, professional marketing description (2-3 sentences), target audience, recommended usage, product category. Clean text.`;
+    const result = await callGemini(prompt);
+    document.getElementById("super-prod-desc").value = result;
+    document.getElementById("super-ai-result-content").textContent = result;
+    document.getElementById("super-ai-result-box").classList.remove("hidden");
+    showToast("AI description generated!", "success");
+  } catch (err) { showToast("AI error: " + err.message, "error"); }
+}
+
+async function superAiCat() {
+  const name = document.getElementById("super-prod-name").value.trim();
+  if (!name) { showToast("Enter a product name first.", "error"); return; }
+  try {
+    const prompt = `Classify shoe "${name}" into ONE: [Sneakers, Running, Boots, Luxury, Sandals, Loafers, Formal, Athletic, Casual, Limited Edition]. Reply category only.`;
+    const result = await callGemini(prompt);
+    document.getElementById("super-ai-result-content").textContent = "Category: " + result.trim();
+    document.getElementById("super-ai-result-box").classList.remove("hidden");
+    showToast("Category: " + result.trim(), "info");
+  } catch (err) { showToast("AI error: " + err.message, "error"); }
+}
+
+async function superAiEnhance() {
+  const name = document.getElementById("super-prod-name").value.trim();
+  const desc = document.getElementById("super-prod-desc").value.trim();
+  const price = document.getElementById("super-prod-price").value;
+  if (!name) { showToast("Enter product details first.", "error"); return; }
+  try {
+    const prompt = `Luxury footwear specialist. Enhance listing:\nName: ${name}\nPrice: KES ${price}\nDesc: ${desc}\n\nProvide enhanced description (3-4 sentences), target audience, key selling points, category.`;
+    const result = await callGemini(prompt);
+    document.getElementById("super-prod-desc").value = result;
+    document.getElementById("super-ai-result-content").textContent = result;
+    document.getElementById("super-ai-result-box").classList.remove("hidden");
+    showToast("Listing enhanced!", "success");
+  } catch (err) { showToast("AI error: " + err.message, "error"); }
+}
+
+/* ─── POST PRODUCT ─── */
+function adminPostProduct() {
+  const name  = document.getElementById("admin-prod-name").value.trim();
+  const price = document.getElementById("admin-prod-price").value;
+  const desc  = document.getElementById("admin-prod-desc").value.trim();
+  const imgEl = document.getElementById("admin-img-preview");
+  const img   = imgEl.classList.contains("hidden") ? "" : imgEl.src;
+
+  if (!name || !price) { showToast("Product name and price are required.", "error"); return; }
+
+  const session = getSession();
+  const products = getProducts();
+
+  // Try to extract category from desc
+  const categories = ["Sneakers","Running","Boots","Luxury","Sandals","Loafers","Formal","Athletic","Casual","Limited Edition"];
+  let category = "Footwear";
+  for (const c of categories) {
+    if (desc.toLowerCase().includes(c.toLowerCase())) { category = c; break; }
+  }
+
+  products.unshift({
+    id: uid(),
+    name, price: parseFloat(price), description: desc,
+    image: img, category,
+    postedBy: session.username || "Admin",
+    likes: 0,
+    timestamp: Date.now()
+  });
+
+  saveProducts(products);
+  clearAdminForm();
+  renderAdminOverview();
+  showToast("Product posted to marketplace!", "success");
+}
+
+function superPostProduct() {
+  const name  = document.getElementById("super-prod-name").value.trim();
+  const price = document.getElementById("super-prod-price").value;
+  const desc  = document.getElementById("super-prod-desc").value.trim();
+  const imgEl = document.getElementById("super-img-preview");
+  const img   = imgEl.classList.contains("hidden") ? "" : imgEl.src;
+
+  if (!name || !price) { showToast("Product name and price are required.", "error"); return; }
+
+  const session = getSession();
+  const products = getProducts();
+
+  const categories = ["Sneakers","Running","Boots","Luxury","Sandals","Loafers","Formal","Athletic","Casual","Limited Edition"];
+  let category = "Footwear";
+  for (const c of categories) {
+    if (desc.toLowerCase().includes(c.toLowerCase())) { category = c; break; }
+  }
+
+  products.unshift({
+    id: uid(),
+    name, price: parseFloat(price), description: desc,
+    image: img, category,
+    postedBy: session.username || "sblgivan",
+    likes: 0,
+    timestamp: Date.now()
+  });
+
+  saveProducts(products);
+  clearSuperForm();
+  showToast("Product posted to marketplace!", "success");
+}
+
+function clearAdminForm() {
+  document.getElementById("admin-prod-name").value = "";
+  document.getElementById("admin-prod-price").value = "";
+  document.getElementById("admin-prod-desc").value = "";
+  document.getElementById("admin-img-preview").classList.add("hidden");
+  document.getElementById("admin-upload-text").classList.remove("hidden");
+  document.getElementById("admin-upload-zone").classList.remove("has-image");
+  document.getElementById("ai-result-box").classList.add("hidden");
+}
+
+function clearSuperForm() {
+  document.getElementById("super-prod-name").value = "";
+  document.getElementById("super-prod-price").value = "";
+  document.getElementById("super-prod-desc").value = "";
+  document.getElementById("super-img-preview").classList.add("hidden");
+  document.getElementById("super-upload-text").classList.remove("hidden");
+  document.getElementById("super-upload-zone").classList.remove("has-image");
+  document.getElementById("super-ai-result-box").classList.add("hidden");
+}
+
+/* ─── MANAGE TABLE ─── */
+function renderManageTable(role) {
+  const products = getProducts();
+  const bodyId   = role + "-manage-tbody";
+  const emptyId  = role + "-manage-empty";
+  const tbody    = document.getElementById(bodyId);
+  const empty    = document.getElementById(emptyId);
+
+  if (!products.length) {
+    tbody.innerHTML = "";
+    empty.classList.remove("hidden");
+    return;
+  }
+
+  empty.classList.add("hidden");
+  tbody.innerHTML = products.map(p => `
+    <tr>
+      <td>
+        <img class="prod-thumb" src="${p.image || ''}"
+          onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2242%22 height=%2242%22><rect fill=%22%2318181f%22 width=%2242%22 height=%2242%22/><text x=%2250%25%22 y=%2255%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23555%22 font-size=%2218%22>👟</text></svg>'"
+          alt="${p.name}" />
+      </td>
+      <td style="color:var(--text);max-width:180px;"><strong>${p.name}</strong><br><span style="font-size:0.74rem;color:var(--muted);">${p.category || "—"}</span></td>
+      <td>${fmt(p.price)}</td>
+      <td>
+        <span class="tag tag-gold">${p.likes || 0} ❤️</span>
+      </td>
+      <td>${relTime(p.timestamp)}</td>
+      <td>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="btn-secondary" style="font-size:0.78rem;padding:6px 12px;" onclick="openEditModal('${p.id}')">Edit</button>
+          <button class="btn-danger" onclick="deleteProduct('${p.id}','${role}')">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function deleteProduct(id, role) {
+  if (!confirm("Delete this product? This cannot be undone.")) return;
+  const products = getProducts().filter(p => p.id !== id);
+  saveProducts(products);
+  renderManageTable(role);
+  showToast("Product deleted.", "info");
+}
+
+/* ─── EDIT MODAL ─── */
+function openEditModal(id) {
+  const p = getProducts().find(pr => pr.id === id);
+  if (!p) return;
+  document.getElementById("edit-prod-id").value = id;
+  document.getElementById("edit-prod-name").value = p.name;
+  document.getElementById("edit-prod-price").value = p.price;
+  document.getElementById("edit-prod-desc").value = p.description || "";
+  document.getElementById("edit-modal-overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeEditModal(e) {
+  if (e.target === document.getElementById("edit-modal-overlay")) closeEditModalBtn();
+}
+
+function closeEditModalBtn() {
+  document.getElementById("edit-modal-overlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function saveEditProduct() {
+  const id    = document.getElementById("edit-prod-id").value;
+  const name  = document.getElementById("edit-prod-name").value.trim();
+  const price = document.getElementById("edit-prod-price").value;
+  const desc  = document.getElementById("edit-prod-desc").value.trim();
+
+  if (!name || !price) { showToast("Name and price are required.", "error"); return; }
+
+  const products = getProducts();
+  const idx = products.findIndex(p => p.id === id);
+  if (idx === -1) return;
+
+  products[idx].name = name;
+  products[idx].price = parseFloat(price);
+  products[idx].description = desc;
+
+  saveProducts(products);
+  closeEditModalBtn();
+  renderManageTable("admin");
+  renderManageTable("super");
+  showToast("Product updated.", "success");
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ANALYTICS CHARTS (Canvas)
+════════════════════════════════════════════════════════════════ */
+const chartInstances = {};
+
+function renderAnalyticsCharts(role) {
+  const prefix = role === "super" ? "super-" : "";
+  const products = getProducts();
+
+  // Stats
+  const totalLikes = products.reduce((s, p) => s + (p.likes || 0), 0);
+  const topProd = [...products].sort((a, b) => b.likes - a.likes)[0];
+  const catMap = {};
+  products.forEach(p => { if (p.category) catMap[p.category] = (catMap[p.category] || 0) + 1; });
+  const topCat = Object.entries(catMap).sort((a, b) => b[1] - a[1])[0];
+
+  const statsId = role === "super" ? "super-analytics-stats" : "analytics-stats";
+  document.getElementById(statsId).innerHTML = `
+    ${statCard("📦", products.length, "Total Products")}
+    ${statCard("❤️", totalLikes, "Total Likes")}
+    ${statCard("🏆", topProd ? topProd.name.slice(0, 14) + "…" : "—", "Most Liked")}
+    ${statCard("🔥", topCat ? topCat[0] : "—", "Top Category")}
+    ${statCard("📊", products.length ? (totalLikes / products.length).toFixed(1) : 0, "Avg Engagement")}
+    ${statCard("🆕", products.filter(p => Date.now() - p.timestamp < 86400000).length, "Added Today")}
+  `;
+
+  const isDark = document.documentElement.getAttribute("data-theme") !== "light";
+  const gridColor  = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
+  const labelColor = isDark ? "rgba(255,255,255,0.4)"  : "rgba(0,0,0,0.4)";
+  const gold = "#d4af37";
+
+  // ── Likes per product (bar) ──
+  const top8 = [...products].sort((a, b) => b.likes - a.likes).slice(0, 8);
+  drawBarChart(prefix + "chart-likes", top8.map(p => p.name.slice(0, 12)), top8.map(p => p.likes || 0), gold, gridColor, labelColor);
+
+  // ── Category popularity (donut) ──
+  const cats = Object.entries(catMap).slice(0, 7);
+  drawDonutChart(prefix + "chart-categories", cats.map(c => c[0]), cats.map(c => c[1]), gridColor, labelColor);
+
+  // ── Upload trend (last 7 days) ──
+  const days = Array.from({length: 7}, (_, i) => {
+    const d = new Date(Date.now() - (6 - i) * 86400000);
+    return d.toLocaleDateString("en", {weekday: "short"});
+  });
+  const dayCounts = Array.from({length: 7}, (_, i) => {
+    const start = Date.now() - (6 - i) * 86400000;
+    const end   = start + 86400000;
+    return products.filter(p => p.timestamp >= start && p.timestamp < end).length;
+  });
+  drawLineChart(prefix + "chart-uploads", days, dayCounts, "#4f8ef7", gridColor, labelColor);
+
+  // ── Engagement over time (likes cumulative) ──
+  const sorted = [...products].sort((a, b) => a.timestamp - b.timestamp);
+  let cumLikes = 0;
+  const engLabels = sorted.slice(0, 10).map(p => p.name.slice(0, 8));
+  const engData   = sorted.slice(0, 10).map(p => { cumLikes += p.likes || 0; return cumLikes; });
+  drawLineChart(prefix + "chart-engagement", engLabels, engData, "#52c48a", gridColor, labelColor);
+}
+
+function drawBarChart(id, labels, data, color, gridColor, labelColor) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  if (chartInstances[id]) { chartInstances[id] = null; }
+  const ctx = canvas.getContext("2d");
+  const W = canvas.offsetWidth || 380;
+  const H = canvas.height || 220;
+  canvas.width = W;
+
+  ctx.clearRect(0, 0, W, H);
+
+  const padL = 40, padR = 16, padT = 16, padB = 50;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB;
+  const max = Math.max(...data, 1);
+  const barW = (chartW / Math.max(labels.length, 1)) * 0.6;
+  const barGap = (chartW / Math.max(labels.length, 1)) * 0.4;
+
+  // Grid lines
+  for (let i = 0; i <= 4; i++) {
+    const y = padT + chartH - (i / 4) * chartH;
+    ctx.strokeStyle = gridColor;
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + chartW, y); ctx.stroke();
+    ctx.fillStyle = labelColor;
+    ctx.font = "10px Inter, sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText(Math.round((i / 4) * max), padL - 6, y + 4);
+  }
+
+  // Bars
+  labels.forEach((label, i) => {
+    const x = padL + i * (barW + barGap) + barGap / 2;
+    const barH = (data[i] / max) * chartH;
+    const y = padT + chartH - barH;
+
+    // Gradient
+    const grad = ctx.createLinearGradient(0, y, 0, padT + chartH);
+    grad.addColorStop(0, color);
+    grad.addColorStop(1, color + "44");
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]);
+    ctx.fill();
+
+    // Label
+    ctx.fillStyle = labelColor;
+    ctx.font = "9px Inter, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(label, x + barW / 2, H - padB + 16);
+  });
+}
+
+function drawLineChart(id, labels, data, color, gridColor, labelColor) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const W = canvas.offsetWidth || 380;
+  const H = canvas.height || 220;
+  canvas.width = W;
+
+  ctx.clearRect(0, 0, W, H);
+
+  const padL = 40, padR = 16, padT = 16, padB = 40;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB;
+  const max = Math.max(...data, 1);
+  const n = labels.length;
+
+  // Grid
+  for (let i = 0; i <= 4; i++) {
+    const y = padT + chartH - (i / 4) * chartH;
+    ctx.strokeStyle = gridColor;
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + chartW, y); ctx.stroke();
+    ctx.fillStyle = labelColor;
+    ctx.font = "10px Inter, sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText(Math.round((i / 4) * max), padL - 6, y + 4);
+  }
+
+  if (n < 2) return;
+
+  // Fill area
+  const grad = ctx.createLinearGradient(0, padT, 0, padT + chartH);
+  grad.addColorStop(0, color + "44");
+  grad.addColorStop(1, color + "00");
+
+  ctx.beginPath();
+  data.forEach((d, i) => {
+    const x = padL + (i / (n - 1)) * chartW;
+    const y = padT + chartH - (d / max) * chartH;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.lineTo(padL + chartW, padT + chartH);
+  ctx.lineTo(padL, padT + chartH);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2.5;
+  ctx.lineJoin = "round";
+  data.forEach((d, i) => {
+    const x = padL + (i / (n - 1)) * chartW;
+    const y = padT + chartH - (d / max) * chartH;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Dots + labels
+  data.forEach((d, i) => {
+    const x = padL + (i / (n - 1)) * chartW;
+    const y = padT + chartH - (d / max) * chartH;
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    ctx.fillStyle = labelColor;
+    ctx.font = "9px Inter, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(labels[i], x, H - padB + 16);
+  });
+}
+
+function drawDonutChart(id, labels, data, gridColor, labelColor) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const W = canvas.offsetWidth || 380;
+  const H = canvas.height || 220;
+  canvas.width = W;
+  ctx.clearRect(0, 0, W, H);
+
+  if (!data.length) { ctx.fillStyle = labelColor; ctx.font = "13px Inter"; ctx.textAlign = "center"; ctx.fillText("No data", W/2, H/2); return; }
+
+  const colors = ["#d4af37","#4f8ef7","#52c48a","#e05252","#9b7fe8","#f0d060","#88ddcc"];
+  const total  = data.reduce((s, n) => s + n, 0);
+  const cx = W * 0.35, cy = H / 2, r = Math.min(cx, cy) * 0.8, inner = r * 0.55;
+
+  let angle = -Math.PI / 2;
+  data.forEach((d, i) => {
+    const slice = (d / total) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, angle, angle + slice);
+    ctx.closePath();
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fill();
+    angle += slice;
+  });
+
+  // Hole
+  ctx.beginPath();
+  ctx.arc(cx, cy, inner, 0, Math.PI * 2);
+  ctx.fillStyle = document.documentElement.getAttribute("data-theme") === "light" ? "#fff" : "#111118";
+  ctx.fill();
+
+  // Center text
+  ctx.fillStyle = "#d4af37";
+  ctx.font = "bold 18px Inter";
+  ctx.textAlign = "center";
+  ctx.fillText(total, cx, cy + 6);
+
+  // Legend
+  const lx = W * 0.65;
+  labels.forEach((l, i) => {
+    const ly = H * 0.12 + i * 22;
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.beginPath(); ctx.roundRect(lx, ly - 8, 10, 10, 2); ctx.fill();
+    ctx.fillStyle = labelColor;
+    ctx.font = "11px Inter";
+    ctx.textAlign = "left";
+    ctx.fillText(l.slice(0, 14), lx + 15, ly);
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SUPER ADMIN DASHBOARD
+════════════════════════════════════════════════════════════════ */
+const DEFAULT_AGENTS = [
+  {
+    id: "site-agent", name: "SiteAgent", emoji: "🔍",
+    color: "rgba(212,175,55,0.14)",
+    desc: "Analyzes product engagement, likes, categories, and user interactions to surface patterns.",
+    prompt: (products) => `You are SiteAgent for Mos Kicks Kaloito. Analyze these ${products.length} products and provide insights on: most liked products, engagement patterns, popular categories, and user interaction trends.\n\nProducts: ${JSON.stringify(products.slice(0,6).map(p => ({name:p.name,likes:p.likes,category:p.category})))}\n\nProvide a concise analysis in 3-4 paragraphs.`
+  },
+  {
+    id: "planning-agent", name: "Planning Agent", emoji: "📋",
+    color: "rgba(79,142,247,0.14)",
+    desc: "Provides inventory planning, demand forecasting, restocking priorities, and market opportunities.",
+    prompt: (products) => `You are PlanningAgent for a luxury shoe marketplace. Based on these products and their engagement:\n\n${JSON.stringify(products.slice(0,6).map(p => ({name:p.name,price:p.price,likes:p.likes,category:p.category})))}\n\nProvide: 1) Inventory planning recommendations 2) Demand forecasting 3) Restocking priorities 4) Market opportunities. Be specific and actionable.`
+  },
+  {
+    id: "reviewer-agent", name: "Reviewer Agent", emoji: "📝",
+    color: "rgba(82,196,138,0.14)",
+    desc: "Reviews product descriptions, listing quality, missing information, and consistency.",
+    prompt: (products) => `You are ReviewerAgent for a luxury shoe marketplace. Review the quality of these product listings:\n\n${JSON.stringify(products.slice(0,5).map(p => ({name:p.name,description:p.description,price:p.price,category:p.category})))}\n\nFor each: assess description quality, identify missing info, rate listing completeness (1-10), and suggest improvements.`
+  },
+  {
+    id: "advisor-agent", name: "Advisor Agent", emoji: "💡",
+    color: "rgba(155,127,232,0.14)",
+    desc: "Recommends which shoes to prioritize, restock, and identifies underperforming products.",
+    prompt: (products) => `You are AdvisorAgent for a luxury shoe marketplace. Based on this product data:\n\n${JSON.stringify(products.map(p => ({name:p.name,price:p.price,likes:p.likes,category:p.category})))}\n\nProvide specific recommendations: 1) Top 3 shoes to prioritize/promote 2) Products needing restocking 3) Underperforming products and why 4) Trending categories to invest in.`
+  }
+];
+
+let selectedAgentId = null;
+let agentStatuses = {}; // id → "idle"|"running"|"done"|"error"
+
+function initSuperDashboard() {
+  renderSuperOverview();
+  renderAgentsGrid();
+  renderWorkflowChain();
+  renderAgentFiles();
+  renderWorkflowHistory();
+}
+
+function superNav(panel, el) {
+  document.querySelectorAll("#view-super .nav-item").forEach(n => n.classList.remove("active"));
+  el.classList.add("active");
+  document.querySelectorAll("#view-super .panel").forEach(p => p.classList.remove("active"));
+  document.getElementById("super-panel-" + panel).classList.add("active");
+  document.getElementById("super-topbar-title").textContent = el.textContent.trim();
+  if (panel === "analytics") renderAnalyticsCharts("super");
+  if (panel === "manage")    renderManageTable("super");
+  if (panel === "overview")  renderSuperOverview();
+  if (panel === "agents")    { renderAgentsGrid(); renderAgentFiles(); }
+  if (panel === "workflow")  { renderWorkflowChain(); renderWorkflowHistory(); }
+  if (panel === "settings")  { renderGeminiSettings(); renderWhatsAppSettings(); }
+  closeSidebar("super");
+}
+
+function renderSuperOverview() {
+  const products = getProducts();
+  const totalLikes = products.reduce((s, p) => s + (p.likes || 0), 0);
+  const topProd = [...products].sort((a, b) => b.likes - a.likes)[0];
+
+  document.getElementById("super-stats").innerHTML = `
+    ${statCard("📦", products.length, "Total Products")}
+    ${statCard("❤️", totalLikes, "Total Likes")}
+    ${statCard("🏆", topProd ? topProd.likes : 0, "Top Product Likes")}
+    ${statCard("🤖", DEFAULT_AGENTS.length + getAgentFiles().length, "Active Agents")}
+  `;
+
+  const recent = [...products].sort((a, b) => b.timestamp - a.timestamp).slice(0, 5);
+  document.getElementById("super-recent-tbody").innerHTML = recent.map(p => `
+    <tr>
+      <td><strong style="color:var(--text);">${p.name}</strong></td>
+      <td>${fmt(p.price)}</td>
+      <td>${p.likes || 0}</td>
+      <td>${relTime(p.timestamp)}</td>
+    </tr>
+  `).join("") || '<tr><td colspan="4" style="text-align:center;color:var(--muted);">No products yet</td></tr>';
+}
+
+function renderAgentsGrid() {
+  const extraFiles = getAgentFiles();
+  const allAgents = [...DEFAULT_AGENTS, ...extraFiles.map(f => ({
+    id: "file-" + f.name, name: f.name.replace(".md", ""), emoji: "📄",
+    color: "rgba(255,255,255,0.04)",
+    desc: "Custom agent loaded from file: " + f.name
+  }))];
+
+  const grid = document.getElementById("agents-grid");
+  grid.innerHTML = allAgents.map(a => {
+    const st = agentStatuses[a.id] || "idle";
+    return `
+      <div class="agent-card ${st === 'running' ? 'running' : ''} ${st === 'error' ? 'error' : ''} ${selectedAgentId === a.id ? 'active' : ''}"
+           onclick="selectAgent('${a.id}')"
+           style="background:${a.color};">
+        <div class="agent-icon" style="background:${a.color};">${a.emoji}</div>
+        <div class="agent-name">${a.name}</div>
+        <div class="agent-desc">${a.desc}</div>
+        <span class="agent-status status-${st}">
+          <span class="status-dot"></span>${st}
+        </span>
+      </div>
+    `;
+  }).join("");
+}
+
+function selectAgent(id) {
+  selectedAgentId = id;
+  renderAgentsGrid();
+}
+
+async function runSelectedAgent() {
+  if (!selectedAgentId) { showToast("Select an agent first.", "error"); return; }
+  const agent = DEFAULT_AGENTS.find(a => a.id === selectedAgentId);
+  if (!agent) { showToast("Custom file agents use the ChainAgents workflow.", "info"); return; }
+
+  const products = getProducts();
+  const log = document.getElementById("agent-output-log");
+
+  agentStatuses[selectedAgentId] = "running";
+  renderAgentsGrid();
+
+  log.innerHTML = `<span class="log-gold">// Running ${agent.name}…</span>\n<span class="log-blue">// Querying Gemini AI with marketplace data…</span>\n`;
+
+  try {
+    const result = await callGemini(agent.prompt(products));
+    agentStatuses[selectedAgentId] = "done";
+
+    log.innerHTML += `\n<span class="log-green">// ${agent.name} completed ✓</span>\n\n` +
+      result.split("\n").map(l => `<span class="log-line">${escHtml(l)}</span>`).join("\n");
+
+    showToast(agent.name + " analysis complete!", "success");
+  } catch (err) {
+    agentStatuses[selectedAgentId] = "error";
+    log.innerHTML += `\n<span class="log-red">// Error: ${escHtml(err.message)}</span>`;
+    showToast("Agent error: " + err.message, "error");
+  }
+
+  renderAgentsGrid();
+}
+
+function clearAgentLog() {
+  document.getElementById("agent-output-log").innerHTML =
+    '<span class="log-gold">// Agent log cleared.</span>\n<span class="log-blue">// Select an agent and click Run…</span>';
+}
+
+/* ─── AGENT FILES ─── */
+function uploadAgentFile(e) {
+  const file = e.target.files[0];
+  if (!file || !file.name.endsWith(".md")) { showToast("Please upload a .md file.", "error"); return; }
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const agents = getAgentFiles();
+    if (agents.find(a => a.name === file.name)) {
+      showToast("Agent file already exists.", "info"); return;
+    }
+    agents.push({ name: file.name, content: ev.target.result, uploaded: Date.now() });
+    saveAgentFiles(agents);
+    renderAgentFiles();
+    renderAgentsGrid();
+    renderWorkflowChain();
+    showToast("Agent file '" + file.name + "' uploaded!", "success");
+  };
+  reader.readAsText(file);
+}
+
+function renderAgentFiles() {
+  const files = getAgentFiles();
+  const list = document.getElementById("agent-file-list");
+  if (!files.length) {
+    list.innerHTML = '<li style="color:var(--muted);font-size:0.84rem;padding:10px 0;">No custom agent files uploaded yet.</li>';
+    return;
+  }
+  list.innerHTML = files.map(f => `
+    <li class="agent-file-item">
+      <span class="agent-file-name">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        ${f.name}
+        <span class="tag tag-blue">${relTime(f.uploaded)}</span>
+      </span>
+      <button class="btn-danger" onclick="removeAgentFile('${f.name}')">Remove</button>
+    </li>
+  `).join("");
+}
+
+function removeAgentFile(name) {
+  const agents = getAgentFiles().filter(a => a.name !== name);
+  saveAgentFiles(agents);
+  renderAgentFiles();
+  renderAgentsGrid();
+  renderWorkflowChain();
+  showToast("Agent file removed.", "info");
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CHAINAGENTS WORKFLOW
+════════════════════════════════════════════════════════════════ */
+let workflowRunning = false;
+let currentWorkflowStep = -1;
+
+function renderWorkflowChain() {
+  const chain = document.getElementById("workflow-chain");
+  chain.innerHTML = DEFAULT_AGENTS.map((a, i) => `
+    <div class="workflow-node ${currentWorkflowStep === i ? 'active-node' : ''} ${currentWorkflowStep > i ? 'done-node' : ''}" id="wf-node-${i}">
+      <span style="font-size:1.3rem;">${a.emoji}</span>
+      <div>
+        <div style="font-weight:600;font-size:0.86rem;">${a.name}</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">${a.desc.slice(0, 50)}…</div>
+      </div>
+    </div>
+    ${i < DEFAULT_AGENTS.length - 1 ? '<div class="workflow-arrow">↓</div>' : ''}
+  `).join("");
+}
+
+async function runWorkflow() {
+  if (workflowRunning) return;
+  workflowRunning = true;
+  currentWorkflowStep = -1;
+
+  const btnText = document.getElementById("workflow-btn-text");
+  const output  = document.getElementById("workflow-output");
+  const products = getProducts();
+
+  btnText.textContent = "Running…";
+  output.innerHTML = '<span class="log-gold">// ChainAgents Workflow Starting…</span>\n<span class="log-blue">// Initializing agent pipeline…</span>\n\n';
+
+  const results = [];
+  const startTime = Date.now();
+
+  for (let i = 0; i < DEFAULT_AGENTS.length; i++) {
+    const agent = DEFAULT_AGENTS[i];
+    currentWorkflowStep = i;
+    renderWorkflowChain();
+
+    output.innerHTML += `<span class="log-blue">// ─── Step ${i+1}/${DEFAULT_AGENTS.length}: ${agent.name} ───</span>\n`;
+    output.scrollTop = output.scrollHeight;
+
+    try {
+      // Build context from previous agent output if available
+      let contextNote = results.length
+        ? "\n\nPrevious agent context:\n" + results[results.length - 1].slice(0, 300)
+        : "";
+      const result = await callGemini(agent.prompt(products) + contextNote);
+      results.push(result);
+
+      output.innerHTML += `<span class="log-green">// ${agent.name} ✓</span>\n`;
+      output.innerHTML += result.split("\n").slice(0, 8).map(l => `<span class="log-line">${escHtml(l)}</span>`).join("\n") + "\n\n";
+      output.scrollTop = output.scrollHeight;
+    } catch (err) {
+      output.innerHTML += `<span class="log-red">// ${agent.name} Error: ${escHtml(err.message)}</span>\n\n`;
+      results.push("Error: " + err.message);
+    }
+  }
+
+  const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+  output.innerHTML += `<span class="log-gold">// ─── Workflow Complete in ${elapsed}s ───</span>`;
+
+  currentWorkflowStep = DEFAULT_AGENTS.length;
+  renderWorkflowChain();
+
+  // Save to history
+  const history = getWorkflowHistory();
+  history.unshift({ timestamp: Date.now(), duration: elapsed, steps: DEFAULT_AGENTS.length });
+  saveWorkflowHistory(history.slice(0, 10));
+  renderWorkflowHistory();
+
+  btnText.textContent = "Run Workflow";
+  workflowRunning = false;
+  showToast("Workflow completed in " + elapsed + "s!", "success");
+}
+
+function resetWorkflow() {
+  currentWorkflowStep = -1;
+  renderWorkflowChain();
+  document.getElementById("workflow-output").innerHTML =
+    '<span class="log-gold">// ChainAgents Workflow Engine</span>\n<span class="log-blue">// Ready. Click Run Workflow to begin…</span>';
+  document.getElementById("workflow-btn-text").textContent = "Run Workflow";
+  workflowRunning = false;
+}
+
+function renderWorkflowHistory() {
+  const history = getWorkflowHistory();
+  const el = document.getElementById("workflow-history");
+  if (!history.length) { el.innerHTML = "<em>No workflows run yet.</em>"; return; }
+  el.innerHTML = history.map(h => `
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+      <span class="tag tag-green">✓</span>
+      <span>${new Date(h.timestamp).toLocaleString()}</span>
+      <span style="color:var(--muted);">${h.steps} agents · ${h.duration}s</span>
+    </div>
+  `).join("");
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SIDEBAR HELPERS (mobile)
+════════════════════════════════════════════════════════════════ */
+function openSidebar(role) {
+  document.getElementById(role + "-sidebar").classList.add("open");
+  document.getElementById(role + "-sidebar-overlay").classList.add("open");
+}
+
+function closeSidebar(role) {
+  document.getElementById(role + "-sidebar")?.classList.remove("open");
+  document.getElementById(role + "-sidebar-overlay")?.classList.remove("open");
+}
+
+/* ════════════════════════════════════════════════════════════════
+   UTILITIES
+════════════════════════════════════════════════════════════════ */
+function escHtml(s) {
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+/* Add/remove a spinner + disabled state on a button during async ops */
+function setBtnLoading(btn, loading, loadingText) {
+  if (!btn) return;
+  if (loading) {
+    if (!btn.dataset.origHtml) btn.dataset.origHtml = btn.innerHTML;
+    btn.classList.add("btn-loading");
+    btn.innerHTML = `<span class="spinner"></span>${loadingText || "Working…"}`;
+  } else {
+    btn.classList.remove("btn-loading");
+    if (btn.dataset.origHtml) {
+      btn.innerHTML = btn.dataset.origHtml;
+      delete btn.dataset.origHtml;
+    }
+  }
+}
+
+/* Scroll to top button visibility */
+window.addEventListener("scroll", () => {
+  const btn = document.getElementById("scroll-top");
+  if (window.scrollY > 400) btn.classList.add("visible");
+  else btn.classList.remove("visible");
+});
+
+/* Enter key on login inputs */
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && document.getElementById("view-login").classList.contains("active")) {
+    handleLogin();
+  }
+});
+
+/* ════════════════════════════════════════════════════════════════
+   BOOTSTRAP
+════════════════════════════════════════════════════════════════ */
+(function init() {
+  // Apply saved theme
+  const savedTheme = localStorage.getItem("lm_theme");
+  if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+
+  // Seed demo products
+  seedProducts();
+
+  // Check existing session
+  checkSession();
+
+  // Hide global loader once ready
+  setTimeout(() => {
+    const loader = document.getElementById("global-loader");
+    if (loader) loader.classList.add("hide");
+  }, 500);
+})();
+</script>
+</body>
+</html>
