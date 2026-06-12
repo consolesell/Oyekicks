@@ -2356,7 +2356,7 @@
 /* ════════════════════════════════════════════════════════════════
    CONFIG
 ════════════════════════════════════════════════════════════════ */
-const GEMINI_DEFAULT_KEY = "YOUR_GEMINI_API_KEY";
+const GEMINI_DEFAULT_KEY = "AQ.Ab8RN6Iizn_QDq31M6eoELkHM2qAAyXxqH3S3BeE31C-wdk6bQ";
 function getGeminiKey() {
   return localStorage.getItem("lm_gemini_key") || GEMINI_DEFAULT_KEY;
 }
@@ -2364,7 +2364,7 @@ function setGeminiKey(key) {
   localStorage.setItem("lm_gemini_key", key);
 }
 function getGeminiUrl() {
-  return "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + getGeminiKey();
+  return "https://generativelanguage.googleapis.com/v1beta/models/gemma-4-26b-a4b-it:generateContent?key=" + getGeminiKey();
 }
 
 function renderGeminiSettings() {
